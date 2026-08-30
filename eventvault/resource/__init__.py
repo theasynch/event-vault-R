@@ -1,0 +1,1 @@
+"""Resource controller sub-package."""

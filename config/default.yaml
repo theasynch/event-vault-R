@@ -1,0 +1,67 @@
+# EventVault-R default configuration
+# All parameters from the PDF proposal (Sections III-IX)
+
+# --- Progressive Encoder (Section V) ---
+codec:
+  wavelet: "bior4.4"              # Wavelet basis (biorthogonal 4.4)
+  decomposition_levels: 3         # 3-level 2D DWT
+  mode: "symmetric"               # Boundary extension mode
+  use_integer_lifting: false      # Set true for embedded path
+
+# --- Science Guardrail (Section VI) ---
+guardrail:
+  epsilon_F: 0.005                # Photometric flux error bound (0.5%)
+  epsilon_x: 0.1                  # Centroid error bound (pixels)
+  min_source_snr: 5.0             # Minimum SNR for source detection
+  aperture_radius: 5.0            # Aperture radius for photometry (pixels)
+  annulus_inner: 7.0              # Background annulus inner radius
+  annulus_outer: 12.0             # Background annulus outer radius
+
+# --- Escrow Buffer (Section IV.D) ---
+escrow:
+  capacity: 100                   # Maximum frames in escrow
+  trigger_horizon_seconds: 1800   # Default escrow horizon (30 min)
+  ecc_enabled: true               # Error-correction metadata
+
+# --- Uncertainty & Retention (Section VII) ---
+uncertainty:
+  method: "softmax_entropy"       # Options: softmax_entropy, mahalanobis, ensemble
+  alpha: 1.0                      # Weight for P_known
+  beta: 1.5                       # Weight for U_OOD (> alpha for safety)
+  temporal_decay_lambda: 0.01     # Temporal weighting decay rate
+
+# --- Resource Controller (Section IX) ---
+resource:
+  memory_warning_fraction: 0.7    # Warn when escrow >70% full
+  memory_critical_fraction: 0.9   # Critical when >90% full
+  min_horizon_seconds: 300        # Minimum escrow horizon under pressure
+  min_detail_level: 1             # Minimum retained DWT depth
+
+# --- Telemetry (Section IV) ---
+telemetry:
+  downlink_bandwidth_bps: 9600    # Simulated downlink rate (bits/sec)
+  max_queue_depth: 50             # Maximum frames in downlink queue
+
+# --- Acquisition (Section IV.A) ---
+acquisition:
+  frame_shape: [1024, 1024]       # Detector dimensions
+  bit_depth: 16                   # 16-bit detector
+  cadence_seconds: 30             # Observation cadence
+
+# --- Synthetic Data (Section XII) ---
+synthetic:
+  sky_background_mean: 200.0      # Mean sky background (ADU)
+  read_noise_std: 10.0            # Gaussian read noise (ADU)
+  num_static_sources: 50          # Number of static point sources
+  psf_fwhm: 3.0                  # PSF FWHM in pixels
+  cosmic_ray_rate: 0.001          # Cosmic rays per pixel per frame
+
+# --- Saved Discovery Test (Section XIII.B) ---
+saved_discovery:
+  num_frames: 60                  # Total frames in sequence
+  cadence_seconds: 30             # Frame cadence
+  transient_start_frame: 10       # Transient begins rising
+  transient_detect_frame: 25      # Transient confidently detected
+  transient_peak_flux: 5000.0     # Peak transient flux (ADU)
+  transient_rise_time_frames: 15  # Frames to reach peak
+  transient_position: [512, 512]  # Transient source location
