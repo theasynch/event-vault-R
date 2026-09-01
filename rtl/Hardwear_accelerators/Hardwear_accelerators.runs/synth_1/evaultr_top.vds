@@ -1,0 +1,702 @@
+#-----------------------------------------------------------
+# Vivado v2023.2 (64-bit)
+# SW Build 4029153 on Fri Oct 13 20:14:34 MDT 2023
+# IP Build 4028589 on Sat Oct 14 00:45:43 MDT 2023
+# SharedData Build 4025554 on Tue Oct 10 17:18:54 MDT 2023
+# Start of session at: Tue Sep  1 22:18:17 2026
+# Process ID: 20260
+# Current directory: C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/Hardwear_accelerators/Hardwear_accelerators.runs/synth_1
+# Command line: vivado.exe -log evaultr_top.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source evaultr_top.tcl
+# Log file: C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/Hardwear_accelerators/Hardwear_accelerators.runs/synth_1/evaultr_top.vds
+# Journal file: C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/Hardwear_accelerators/Hardwear_accelerators.runs/synth_1\vivado.jou
+# Running On: MAYAPATAL, OS: Windows, CPU Frequency: 3194 MHz, CPU Physical cores: 12, Host memory: 16395 MB
+#-----------------------------------------------------------
+source evaultr_top.tcl -notrace
+Command: synth_design -top evaultr_top -part xc7k70tfbv676-1
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xc7k70t'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7k70t'
+INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 2 processes.
+INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
+INFO: [Synth 8-7075] Helper process launched with PID 19188
+---------------------------------------------------------------------------------
+Starting Synthesize : Time (s): cpu = 00:00:03 ; elapsed = 00:00:04 . Memory (MB): peak = 923.285 ; gain = 445.531
+---------------------------------------------------------------------------------
+INFO: [Synth 8-6157] synthesizing module 'evaultr_top' [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/evaultr_top.sv:16]
+INFO: [Synth 8-6157] synthesizing module 'calibration_engine' [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/calibration/calibration_engine.sv:23]
+	Parameter PIXEL_W bound to: 32'sb00000000000000000000000000010000 
+	Parameter FIXED_W bound to: 32'sb00000000000000000000000000100000 
+	Parameter FRAC_W bound to: 32'sb00000000000000000000000000010000 
+	Parameter MAX_COLS bound to: 32'sb00000000000000000000010000000000 
+	Parameter MAX_ROWS bound to: 32'sb00000000000000000000010000000000 
+INFO: [Synth 8-6155] done synthesizing module 'calibration_engine' (0#1) [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/calibration/calibration_engine.sv:23]
+INFO: [Synth 8-6157] synthesizing module 'dwt_2d_top' [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/dwt/dwt_2d_top.sv:14]
+	Parameter IN_W bound to: 32'sb00000000000000000000000000010000 
+	Parameter LINE_COLS bound to: 32'sb00000000000000000000010000000000 
+INFO: [Synth 8-6157] synthesizing module 'dwt_2d_level' [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/dwt/dwt_2d_level.sv:13]
+	Parameter IN_W bound to: 32'sb00000000000000000000000000010000 
+	Parameter OUT_W bound to: 32'sb00000000000000000000000000010001 
+	Parameter LINE_COLS bound to: 32'sb00000000000000000000010000000000 
+INFO: [Synth 8-6157] synthesizing module 'dwt_1d_haar' [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/dwt/dwt_1d_haar.sv:23]
+	Parameter IN_W bound to: 32'sb00000000000000000000000000010000 
+	Parameter OUT_W bound to: 32'sb00000000000000000000000000010001 
+INFO: [Synth 8-6155] done synthesizing module 'dwt_1d_haar' (0#1) [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/dwt/dwt_1d_haar.sv:23]
+INFO: [Synth 8-6155] done synthesizing module 'dwt_2d_level' (0#1) [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/dwt/dwt_2d_level.sv:13]
+INFO: [Synth 8-6157] synthesizing module 'dwt_2d_level__parameterized0' [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/dwt/dwt_2d_level.sv:13]
+	Parameter IN_W bound to: 32'sb00000000000000000000000000010001 
+	Parameter OUT_W bound to: 32'sb00000000000000000000000000010010 
+	Parameter LINE_COLS bound to: 32'sb00000000000000000000001000000000 
+INFO: [Synth 8-6157] synthesizing module 'dwt_1d_haar__parameterized0' [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/dwt/dwt_1d_haar.sv:23]
+	Parameter IN_W bound to: 32'sb00000000000000000000000000010001 
+	Parameter OUT_W bound to: 32'sb00000000000000000000000000010010 
+INFO: [Synth 8-6155] done synthesizing module 'dwt_1d_haar__parameterized0' (0#1) [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/dwt/dwt_1d_haar.sv:23]
+INFO: [Synth 8-6155] done synthesizing module 'dwt_2d_level__parameterized0' (0#1) [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/dwt/dwt_2d_level.sv:13]
+INFO: [Synth 8-6157] synthesizing module 'dwt_2d_level__parameterized1' [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/dwt/dwt_2d_level.sv:13]
+	Parameter IN_W bound to: 32'sb00000000000000000000000000010010 
+	Parameter OUT_W bound to: 32'sb00000000000000000000000000010011 
+	Parameter LINE_COLS bound to: 32'sb00000000000000000000000100000000 
+INFO: [Synth 8-6157] synthesizing module 'dwt_1d_haar__parameterized1' [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/dwt/dwt_1d_haar.sv:23]
+	Parameter IN_W bound to: 32'sb00000000000000000000000000010010 
+	Parameter OUT_W bound to: 32'sb00000000000000000000000000010011 
+INFO: [Synth 8-6155] done synthesizing module 'dwt_1d_haar__parameterized1' (0#1) [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/dwt/dwt_1d_haar.sv:23]
+INFO: [Synth 8-6155] done synthesizing module 'dwt_2d_level__parameterized1' (0#1) [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/dwt/dwt_2d_level.sv:13]
+INFO: [Synth 8-6155] done synthesizing module 'dwt_2d_top' (0#1) [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/dwt/dwt_2d_top.sv:14]
+INFO: [Synth 8-6157] synthesizing module 'source_extractor' [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/science/source_extractor.sv:11]
+	Parameter PIXEL_W bound to: 32'sb00000000000000000000000000010011 
+	Parameter LINE_COLS bound to: 32'sb00000000000000000000000010000000 
+INFO: [Synth 8-6157] synthesizing module 'line_buffer' [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/common/line_buffer.sv:18]
+	Parameter PIXEL_W bound to: 32'sb00000000000000000000000000010011 
+	Parameter LINE_COLS bound to: 32'sb00000000000000000000000010000000 
+	Parameter NUM_LINES bound to: 32'sb00000000000000000000000000000011 
+INFO: [Synth 8-6155] done synthesizing module 'line_buffer' (0#1) [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/common/line_buffer.sv:18]
+INFO: [Synth 8-6155] done synthesizing module 'source_extractor' (0#1) [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/science/source_extractor.sv:11]
+INFO: [Synth 8-6157] synthesizing module 'science_guardrail' [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/science/science_guardrail.sv:14]
+	Parameter PIXEL_W bound to: 32'sb00000000000000000000000000010011 
+	Parameter LINE_COLS bound to: 32'sb00000000000000000000000010000000 
+INFO: [Synth 8-6157] synthesizing module 'line_buffer__parameterized0' [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/common/line_buffer.sv:18]
+	Parameter PIXEL_W bound to: 32'sb00000000000000000000000000010011 
+	Parameter LINE_COLS bound to: 32'sb00000000000000000000000010000000 
+	Parameter NUM_LINES bound to: 32'sb00000000000000000000000000000101 
+INFO: [Synth 8-6155] done synthesizing module 'line_buffer__parameterized0' (0#1) [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/common/line_buffer.sv:18]
+INFO: [Synth 8-6155] done synthesizing module 'science_guardrail' (0#1) [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/science/science_guardrail.sv:14]
+INFO: [Synth 8-6157] synthesizing module 'escrow_controller' [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/escrow/escrow_controller.sv:14]
+	Parameter CAPACITY bound to: 32'sb00000000000000000000000010000000 
+INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/escrow/escrow_controller.sv:126]
+INFO: [Synth 8-6155] done synthesizing module 'escrow_controller' (0#1) [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/escrow/escrow_controller.sv:14]
+INFO: [Synth 8-6157] synthesizing module 'resource_controller' [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/resource/resource_controller.sv:12]
+	Parameter CAPACITY bound to: 32'sb00000000000000000000000010000000 
+INFO: [Synth 8-6155] done synthesizing module 'resource_controller' (0#1) [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/resource/resource_controller.sv:12]
+INFO: [Synth 8-6157] synthesizing module 'downlink_tx' [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/telemetry/downlink_tx.sv:11]
+	Parameter CLK_FREQ_MHZ bound to: 32'sb00000000000000000000000001100100 
+	Parameter BAUD_RATE_BPS bound to: 32'sb00000000000000000010010110000000 
+INFO: [Synth 8-6155] done synthesizing module 'downlink_tx' (0#1) [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/telemetry/downlink_tx.sv:11]
+INFO: [Synth 8-6155] done synthesizing module 'evaultr_top' (0#1) [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/evaultr_top.sv:16]
+WARNING: [Synth 8-7137] Register dark_pixel_reg in module calibration_engine has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/calibration/calibration_engine.sv:138]
+WARNING: [Synth 8-7137] Register flat_pixel_reg in module calibration_engine has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/calibration/calibration_engine.sv:139]
+WARNING: [Synth 8-7137] Register s1_last_col_reg in module calibration_engine has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/calibration/calibration_engine.sv:141]
+WARNING: [Synth 8-7137] Register s1_last_row_reg in module calibration_engine has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/calibration/calibration_engine.sv:142]
+WARNING: [Synth 8-7137] Register sub_result_reg in module calibration_engine has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/calibration/calibration_engine.sv:156]
+WARNING: [Synth 8-7137] Register flat_s2_reg in module calibration_engine has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/calibration/calibration_engine.sv:157]
+WARNING: [Synth 8-7137] Register s2_last_col_reg in module calibration_engine has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/calibration/calibration_engine.sv:159]
+WARNING: [Synth 8-7137] Register s2_last_row_reg in module calibration_engine has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/calibration/calibration_engine.sv:160]
+WARNING: [Synth 8-7137] Register s3_last_col_reg in module calibration_engine has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/calibration/calibration_engine.sv:206]
+WARNING: [Synth 8-7137] Register s3_last_row_reg in module calibration_engine has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/calibration/calibration_engine.sv:207]
+WARNING: [Synth 8-7137] Register cal_data_reg in module calibration_engine has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/calibration/calibration_engine.sv:224]
+WARNING: [Synth 8-7137] Register cal_last_col_reg in module calibration_engine has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/calibration/calibration_engine.sv:227]
+WARNING: [Synth 8-7137] Register cal_last_row_reg in module calibration_engine has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/calibration/calibration_engine.sv:228]
+WARNING: [Synth 8-6014] Unused sequential element even_last_reg was removed.  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/dwt/dwt_1d_haar.sv:60]
+WARNING: [Synth 8-7137] Register lo_data_reg in module dwt_1d_haar has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/dwt/dwt_1d_haar.sv:100]
+WARNING: [Synth 8-7137] Register lo_last_reg in module dwt_1d_haar has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/dwt/dwt_1d_haar.sv:101]
+WARNING: [Synth 8-7137] Register hi_data_reg in module dwt_1d_haar has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/dwt/dwt_1d_haar.sv:104]
+WARNING: [Synth 8-7137] Register hi_last_reg in module dwt_1d_haar has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/dwt/dwt_1d_haar.sv:105]
+WARNING: [Synth 8-7137] Register buf_L_reg in module dwt_2d_level has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code 
+WARNING: [Synth 8-7137] Register buf_H_reg in module dwt_2d_level has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code 
+WARNING: [Synth 8-7137] Register out_LL_reg in module dwt_2d_level has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/dwt/dwt_2d_level.sv:150]
+WARNING: [Synth 8-7137] Register out_LH_reg in module dwt_2d_level has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/dwt/dwt_2d_level.sv:152]
+WARNING: [Synth 8-7137] Register out_HL_reg in module dwt_2d_level has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/dwt/dwt_2d_level.sv:155]
+WARNING: [Synth 8-7137] Register out_HH_reg in module dwt_2d_level has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/dwt/dwt_2d_level.sv:157]
+WARNING: [Synth 8-7137] Register out_last_col_reg in module dwt_2d_level has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/dwt/dwt_2d_level.sv:159]
+WARNING: [Synth 8-4767] Trying to implement RAM 'buf_L_reg' in registers. Block RAM or DRAM implementation is not possible; see log for reasons.
+Reason is one or more of the following :
+	1: RAM is sensitive to asynchronous reset signal. this RTL style is not supported. 
+RAM "buf_L_reg" dissolved into registers
+WARNING: [Synth 8-4767] Trying to implement RAM 'buf_H_reg' in registers. Block RAM or DRAM implementation is not possible; see log for reasons.
+Reason is one or more of the following :
+	1: RAM is sensitive to asynchronous reset signal. this RTL style is not supported. 
+RAM "buf_H_reg" dissolved into registers
+WARNING: [Synth 8-3848] Net out_last_row in module/entity dwt_2d_level does not have driver. [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/dwt/dwt_2d_level.sv:35]
+WARNING: [Synth 8-6014] Unused sequential element even_last_reg was removed.  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/dwt/dwt_1d_haar.sv:60]
+WARNING: [Synth 8-7137] Register lo_data_reg in module dwt_1d_haar__parameterized0 has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/dwt/dwt_1d_haar.sv:100]
+WARNING: [Synth 8-7137] Register lo_last_reg in module dwt_1d_haar__parameterized0 has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/dwt/dwt_1d_haar.sv:101]
+WARNING: [Synth 8-7137] Register hi_data_reg in module dwt_1d_haar__parameterized0 has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/dwt/dwt_1d_haar.sv:104]
+WARNING: [Synth 8-7137] Register hi_last_reg in module dwt_1d_haar__parameterized0 has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/dwt/dwt_1d_haar.sv:105]
+WARNING: [Synth 8-7137] Register buf_L_reg in module dwt_2d_level__parameterized0 has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code 
+WARNING: [Synth 8-7137] Register buf_H_reg in module dwt_2d_level__parameterized0 has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code 
+WARNING: [Synth 8-7137] Register out_LL_reg in module dwt_2d_level__parameterized0 has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/dwt/dwt_2d_level.sv:150]
+WARNING: [Synth 8-7137] Register out_LH_reg in module dwt_2d_level__parameterized0 has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/dwt/dwt_2d_level.sv:152]
+WARNING: [Synth 8-7137] Register out_HL_reg in module dwt_2d_level__parameterized0 has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/dwt/dwt_2d_level.sv:155]
+WARNING: [Synth 8-7137] Register out_HH_reg in module dwt_2d_level__parameterized0 has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/dwt/dwt_2d_level.sv:157]
+WARNING: [Synth 8-7137] Register out_last_col_reg in module dwt_2d_level__parameterized0 has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/dwt/dwt_2d_level.sv:159]
+WARNING: [Synth 8-4767] Trying to implement RAM 'buf_L_reg' in registers. Block RAM or DRAM implementation is not possible; see log for reasons.
+Reason is one or more of the following :
+	1: RAM is sensitive to asynchronous reset signal. this RTL style is not supported. 
+RAM "buf_L_reg" dissolved into registers
+WARNING: [Synth 8-4767] Trying to implement RAM 'buf_H_reg' in registers. Block RAM or DRAM implementation is not possible; see log for reasons.
+Reason is one or more of the following :
+	1: RAM is sensitive to asynchronous reset signal. this RTL style is not supported. 
+RAM "buf_H_reg" dissolved into registers
+WARNING: [Synth 8-3848] Net out_last_row in module/entity dwt_2d_level__parameterized0 does not have driver. [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/dwt/dwt_2d_level.sv:35]
+WARNING: [Synth 8-6014] Unused sequential element even_last_reg was removed.  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/dwt/dwt_1d_haar.sv:60]
+WARNING: [Synth 8-7137] Register lo_data_reg in module dwt_1d_haar__parameterized1 has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/dwt/dwt_1d_haar.sv:100]
+WARNING: [Synth 8-7137] Register lo_last_reg in module dwt_1d_haar__parameterized1 has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/dwt/dwt_1d_haar.sv:101]
+WARNING: [Synth 8-7137] Register hi_data_reg in module dwt_1d_haar__parameterized1 has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/dwt/dwt_1d_haar.sv:104]
+WARNING: [Synth 8-7137] Register hi_last_reg in module dwt_1d_haar__parameterized1 has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/dwt/dwt_1d_haar.sv:105]
+WARNING: [Synth 8-7137] Register buf_L_reg in module dwt_2d_level__parameterized1 has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code 
+WARNING: [Synth 8-7137] Register buf_H_reg in module dwt_2d_level__parameterized1 has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code 
+WARNING: [Synth 8-7137] Register out_LL_reg in module dwt_2d_level__parameterized1 has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/dwt/dwt_2d_level.sv:150]
+WARNING: [Synth 8-7137] Register out_LH_reg in module dwt_2d_level__parameterized1 has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/dwt/dwt_2d_level.sv:152]
+WARNING: [Synth 8-7137] Register out_HL_reg in module dwt_2d_level__parameterized1 has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/dwt/dwt_2d_level.sv:155]
+WARNING: [Synth 8-7137] Register out_HH_reg in module dwt_2d_level__parameterized1 has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/dwt/dwt_2d_level.sv:157]
+WARNING: [Synth 8-7137] Register out_last_col_reg in module dwt_2d_level__parameterized1 has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/dwt/dwt_2d_level.sv:159]
+WARNING: [Synth 8-4767] Trying to implement RAM 'buf_L_reg' in registers. Block RAM or DRAM implementation is not possible; see log for reasons.
+Reason is one or more of the following :
+	1: RAM is sensitive to asynchronous reset signal. this RTL style is not supported. 
+RAM "buf_L_reg" dissolved into registers
+WARNING: [Synth 8-4767] Trying to implement RAM 'buf_H_reg' in registers. Block RAM or DRAM implementation is not possible; see log for reasons.
+Reason is one or more of the following :
+	1: RAM is sensitive to asynchronous reset signal. this RTL style is not supported. 
+RAM "buf_H_reg" dissolved into registers
+WARNING: [Synth 8-3848] Net out_last_row in module/entity dwt_2d_level__parameterized1 does not have driver. [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/dwt/dwt_2d_level.sv:35]
+WARNING: [Synth 8-11357] Potential Runtime issue for 3D-RAM or RAM from Record/Structs for RAM  mem_reg with 12160 registers
+WARNING: [Synth 8-7137] Register flux_bound_reg in module science_guardrail has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/science/science_guardrail.sv:183]
+WARNING: [Synth 8-7137] Register cent_bound_reg in module science_guardrail has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/science/science_guardrail.sv:184]
+WARNING: [Synth 8-6014] Unused sequential element meta_mem_reg[97][timestamp] was removed.  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/escrow/escrow_controller.sv:66]
+WARNING: [Synth 8-6014] Unused sequential element mem_dout_reg[timestamp] was removed.  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/escrow/escrow_controller.sv:67]
+WARNING: [Synth 8-6014] Unused sequential element mem_din_reg[timestamp] was removed.  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/escrow/escrow_controller.sv:187]
+WARNING: [Synth 8-7137] Register op_is_lock_reg in module escrow_controller has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/escrow/escrow_controller.sv:131]
+WARNING: [Synth 8-7137] Register target_frame_id_reg in module escrow_controller has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/escrow/escrow_controller.sv:132]
+WARNING: [Synth 8-7137] Register search_ptr_reg in module escrow_controller has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/escrow/escrow_controller.sv:145]
+WARNING: [Synth 8-7137] Register search_count_reg in module escrow_controller has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/escrow/escrow_controller.sv:146]
+WARNING: [Synth 8-7137] Register mem_addr_reg in module escrow_controller has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/escrow/escrow_controller.sv:147]
+WARNING: [Synth 8-7137] Register mem_din_reg[frame_id] in module escrow_controller has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/escrow/escrow_controller.sv:187]
+WARNING: [Synth 8-7137] Register mem_din_reg[locked] in module escrow_controller has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/escrow/escrow_controller.sv:187]
+WARNING: [Synth 8-7137] Register mem_din_reg[promoted] in module escrow_controller has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/escrow/escrow_controller.sv:187]
+WARNING: [Synth 8-7137] Register mem_din_reg[valid] in module escrow_controller has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/escrow/escrow_controller.sv:187]
+WARNING: [Synth 8-7137] Register push_sdram_addr_reg in module escrow_controller has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code  [C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/escrow/escrow_controller.sv:196]
+WARNING: [Synth 8-7129] Port push_timestamp[31] in module escrow_controller is either unconnected or has no load
+WARNING: [Synth 8-7129] Port push_timestamp[30] in module escrow_controller is either unconnected or has no load
+WARNING: [Synth 8-7129] Port push_timestamp[29] in module escrow_controller is either unconnected or has no load
+WARNING: [Synth 8-7129] Port push_timestamp[28] in module escrow_controller is either unconnected or has no load
+WARNING: [Synth 8-7129] Port push_timestamp[27] in module escrow_controller is either unconnected or has no load
+WARNING: [Synth 8-7129] Port push_timestamp[26] in module escrow_controller is either unconnected or has no load
+WARNING: [Synth 8-7129] Port push_timestamp[25] in module escrow_controller is either unconnected or has no load
+WARNING: [Synth 8-7129] Port push_timestamp[24] in module escrow_controller is either unconnected or has no load
+WARNING: [Synth 8-7129] Port push_timestamp[23] in module escrow_controller is either unconnected or has no load
+WARNING: [Synth 8-7129] Port push_timestamp[22] in module escrow_controller is either unconnected or has no load
+WARNING: [Synth 8-7129] Port push_timestamp[21] in module escrow_controller is either unconnected or has no load
+WARNING: [Synth 8-7129] Port push_timestamp[20] in module escrow_controller is either unconnected or has no load
+WARNING: [Synth 8-7129] Port push_timestamp[19] in module escrow_controller is either unconnected or has no load
+WARNING: [Synth 8-7129] Port push_timestamp[18] in module escrow_controller is either unconnected or has no load
+WARNING: [Synth 8-7129] Port push_timestamp[17] in module escrow_controller is either unconnected or has no load
+WARNING: [Synth 8-7129] Port push_timestamp[16] in module escrow_controller is either unconnected or has no load
+WARNING: [Synth 8-7129] Port push_timestamp[15] in module escrow_controller is either unconnected or has no load
+WARNING: [Synth 8-7129] Port push_timestamp[14] in module escrow_controller is either unconnected or has no load
+WARNING: [Synth 8-7129] Port push_timestamp[13] in module escrow_controller is either unconnected or has no load
+WARNING: [Synth 8-7129] Port push_timestamp[12] in module escrow_controller is either unconnected or has no load
+WARNING: [Synth 8-7129] Port push_timestamp[11] in module escrow_controller is either unconnected or has no load
+WARNING: [Synth 8-7129] Port push_timestamp[10] in module escrow_controller is either unconnected or has no load
+WARNING: [Synth 8-7129] Port push_timestamp[9] in module escrow_controller is either unconnected or has no load
+WARNING: [Synth 8-7129] Port push_timestamp[8] in module escrow_controller is either unconnected or has no load
+WARNING: [Synth 8-7129] Port push_timestamp[7] in module escrow_controller is either unconnected or has no load
+WARNING: [Synth 8-7129] Port push_timestamp[6] in module escrow_controller is either unconnected or has no load
+WARNING: [Synth 8-7129] Port push_timestamp[5] in module escrow_controller is either unconnected or has no load
+WARNING: [Synth 8-7129] Port push_timestamp[4] in module escrow_controller is either unconnected or has no load
+WARNING: [Synth 8-7129] Port push_timestamp[3] in module escrow_controller is either unconnected or has no load
+WARNING: [Synth 8-7129] Port push_timestamp[2] in module escrow_controller is either unconnected or has no load
+WARNING: [Synth 8-7129] Port push_timestamp[1] in module escrow_controller is either unconnected or has no load
+WARNING: [Synth 8-7129] Port push_timestamp[0] in module escrow_controller is either unconnected or has no load
+WARNING: [Synth 8-7129] Port out_last_row in module dwt_2d_level__parameterized1 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port out_last_row in module dwt_2d_level__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port out_last_row in module dwt_2d_level is either unconnected or has no load
+WARNING: [Synth 8-7129] Port dark_wr_addr[19] in module calibration_engine is either unconnected or has no load
+WARNING: [Synth 8-7129] Port dark_wr_addr[18] in module calibration_engine is either unconnected or has no load
+WARNING: [Synth 8-7129] Port dark_wr_addr[17] in module calibration_engine is either unconnected or has no load
+WARNING: [Synth 8-7129] Port dark_wr_addr[16] in module calibration_engine is either unconnected or has no load
+WARNING: [Synth 8-7129] Port dark_wr_addr[15] in module calibration_engine is either unconnected or has no load
+WARNING: [Synth 8-7129] Port dark_wr_addr[14] in module calibration_engine is either unconnected or has no load
+WARNING: [Synth 8-7129] Port dark_wr_addr[13] in module calibration_engine is either unconnected or has no load
+WARNING: [Synth 8-7129] Port dark_wr_addr[12] in module calibration_engine is either unconnected or has no load
+WARNING: [Synth 8-7129] Port flat_wr_addr[19] in module calibration_engine is either unconnected or has no load
+WARNING: [Synth 8-7129] Port flat_wr_addr[18] in module calibration_engine is either unconnected or has no load
+WARNING: [Synth 8-7129] Port flat_wr_addr[17] in module calibration_engine is either unconnected or has no load
+WARNING: [Synth 8-7129] Port flat_wr_addr[16] in module calibration_engine is either unconnected or has no load
+WARNING: [Synth 8-7129] Port flat_wr_addr[15] in module calibration_engine is either unconnected or has no load
+WARNING: [Synth 8-7129] Port flat_wr_addr[14] in module calibration_engine is either unconnected or has no load
+WARNING: [Synth 8-7129] Port flat_wr_addr[13] in module calibration_engine is either unconnected or has no load
+WARNING: [Synth 8-7129] Port flat_wr_addr[12] in module calibration_engine is either unconnected or has no load
+---------------------------------------------------------------------------------
+Finished Synthesize : Time (s): cpu = 00:00:08 ; elapsed = 00:00:10 . Memory (MB): peak = 1321.645 ; gain = 843.891
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:10 ; elapsed = 00:00:11 . Memory (MB): peak = 1321.645 ; gain = 843.891
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xc7k70tfbv676-1
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:10 ; elapsed = 00:00:11 . Memory (MB): peak = 1321.645 ; gain = 843.891
+---------------------------------------------------------------------------------
+INFO: [Device 21-403] Loading part xc7k70tfbv676-1
+INFO: [Synth 8-802] inferred FSM for state register 'state_reg' in module 'downlink_tx'
+---------------------------------------------------------------------------------------------------
+                   State |                     New Encoding |                Previous Encoding 
+---------------------------------------------------------------------------------------------------
+                    IDLE |                               00 |                               00
+                   START |                               01 |                               01
+                    DATA |                               10 |                               10
+                    STOP |                               11 |                               11
+---------------------------------------------------------------------------------------------------
+INFO: [Synth 8-3354] encoded FSM with state register 'state_reg' using encoding 'sequential' in module 'downlink_tx'
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:23 ; elapsed = 00:00:24 . Memory (MB): peak = 1492.102 ; gain = 1014.348
+---------------------------------------------------------------------------------
+No constraint files found.
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+Detailed RTL Component Info : 
++---Adders : 
+	   5 Input   32 Bit       Adders := 8     
+	   2 Input   32 Bit       Adders := 3     
+	   3 Input   32 Bit       Adders := 2     
+	   5 Input   22 Bit       Adders := 5     
+	   2 Input   20 Bit       Adders := 2     
+	   2 Input   19 Bit       Adders := 3     
+	   3 Input   19 Bit       Adders := 3     
+	   2 Input   18 Bit       Adders := 3     
+	   3 Input   18 Bit       Adders := 3     
+	   3 Input   17 Bit       Adders := 4     
+	   2 Input   17 Bit       Adders := 1     
+	   2 Input   12 Bit       Adders := 1     
+	   2 Input   10 Bit       Adders := 2     
+	   2 Input    9 Bit       Adders := 2     
+	   2 Input    8 Bit       Adders := 3     
+	   2 Input    7 Bit       Adders := 13    
+	   2 Input    4 Bit       Adders := 1     
+	   2 Input    3 Bit       Adders := 3     
+	   2 Input    2 Bit       Adders := 1     
++---Registers : 
+	               48 Bit    Registers := 2     
+	               32 Bit    Registers := 13    
+	               22 Bit    Registers := 5     
+	               19 Bit    Registers := 1325  
+	               18 Bit    Registers := 523   
+	               17 Bit    Registers := 1036  
+	               16 Bit    Registers := 5     
+	               10 Bit    Registers := 2     
+	                9 Bit    Registers := 1     
+	                8 Bit    Registers := 3     
+	                7 Bit    Registers := 11    
+	                4 Bit    Registers := 1     
+	                3 Bit    Registers := 1     
+	                1 Bit    Registers := 59    
++---Multipliers : 
+	              16x32  Multipliers := 2     
++---RAMs : 
+	              64K Bit	(4096 X 16 bit)          RAMs := 2     
+	               4K Bit	(128 X 32 bit)          RAMs := 1     
+	              128 Bit	(1 X 1 bit)          RAMs := 3     
++---Muxes : 
+	   2 Input   32 Bit        Muxes := 6     
+	   8 Input   32 Bit        Muxes := 1     
+	   2 Input   31 Bit        Muxes := 1     
+	   3 Input   19 Bit        Muxes := 384   
+	   2 Input   16 Bit        Muxes := 2     
+	   2 Input   12 Bit        Muxes := 1     
+	   2 Input    9 Bit        Muxes := 2     
+	   2 Input    8 Bit        Muxes := 2     
+	   4 Input    8 Bit        Muxes := 1     
+	   2 Input    7 Bit        Muxes := 9     
+	   8 Input    7 Bit        Muxes := 3     
+	   2 Input    4 Bit        Muxes := 1     
+	   8 Input    4 Bit        Muxes := 1     
+	   2 Input    3 Bit        Muxes := 2     
+	   3 Input    3 Bit        Muxes := 1     
+	   4 Input    3 Bit        Muxes := 1     
+	   2 Input    2 Bit        Muxes := 4     
+	   8 Input    2 Bit        Muxes := 1     
+	   4 Input    2 Bit        Muxes := 1     
+	   2 Input    1 Bit        Muxes := 2203  
+	   8 Input    1 Bit        Muxes := 15    
+	   4 Input    1 Bit        Muxes := 6     
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 240 (col length:80)
+BRAMs: 270 (col length: RAMB18 80 RAMB36 40)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+No constraint files found.
+---------------------------------------------------------------------------------
+Start Cross Boundary and Area Optimization
+---------------------------------------------------------------------------------
+DSP Report: Generating DSP cent_bound0, operation Mode is: A2*B.
+DSP Report: register cent_bound0 is absorbed into DSP cent_bound0.
+DSP Report: operator cent_bound0 is absorbed into DSP cent_bound0.
+DSP Report: operator cent_bound0 is absorbed into DSP cent_bound0.
+DSP Report: Generating DSP cent_bound0, operation Mode is: (PCIN>>17)+A*B2.
+DSP Report: register sum_flux_reg is absorbed into DSP cent_bound0.
+DSP Report: operator cent_bound0 is absorbed into DSP cent_bound0.
+DSP Report: operator cent_bound0 is absorbed into DSP cent_bound0.
+DSP Report: Generating DSP flux_bound0, operation Mode is: A*B.
+DSP Report: operator flux_bound0 is absorbed into DSP flux_bound0.
+DSP Report: operator flux_bound0 is absorbed into DSP flux_bound0.
+DSP Report: Generating DSP flux_bound0, operation Mode is: (PCIN>>17)+A*B.
+DSP Report: operator flux_bound0 is absorbed into DSP flux_bound0.
+DSP Report: operator flux_bound0 is absorbed into DSP flux_bound0.
+WARNING: [Synth 8-7129] Port out_last_row in module dwt_2d_level__parameterized1 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port out_last_row in module dwt_2d_level__parameterized0 is either unconnected or has no load
+INFO: [Synth 8-3886] merging instance 'level_3/u_row_dwt/lo_data_reg[17]' (FDE) to 'level_3/u_row_dwt/lo_data_reg[18]'
+INFO: [Synth 8-3886] merging instance 'level_2/u_row_dwt/lo_data_reg[17]' (FDE) to 'level_2/u_row_dwt/lo_data_reg[16]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[127][17]' (FDE) to 'level_3/buf_L_reg[127][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[126][17]' (FDE) to 'level_3/buf_L_reg[126][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[125][17]' (FDE) to 'level_3/buf_L_reg[125][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[124][17]' (FDE) to 'level_3/buf_L_reg[124][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[123][17]' (FDE) to 'level_3/buf_L_reg[123][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[122][17]' (FDE) to 'level_3/buf_L_reg[122][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[121][17]' (FDE) to 'level_3/buf_L_reg[121][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[120][17]' (FDE) to 'level_3/buf_L_reg[120][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[119][17]' (FDE) to 'level_3/buf_L_reg[119][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[118][17]' (FDE) to 'level_3/buf_L_reg[118][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[117][17]' (FDE) to 'level_3/buf_L_reg[117][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[116][17]' (FDE) to 'level_3/buf_L_reg[116][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[115][17]' (FDE) to 'level_3/buf_L_reg[115][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[114][17]' (FDE) to 'level_3/buf_L_reg[114][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[113][17]' (FDE) to 'level_3/buf_L_reg[113][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[112][17]' (FDE) to 'level_3/buf_L_reg[112][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[111][17]' (FDE) to 'level_3/buf_L_reg[111][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[110][17]' (FDE) to 'level_3/buf_L_reg[110][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[109][17]' (FDE) to 'level_3/buf_L_reg[109][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[108][17]' (FDE) to 'level_3/buf_L_reg[108][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[107][17]' (FDE) to 'level_3/buf_L_reg[107][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[106][17]' (FDE) to 'level_3/buf_L_reg[106][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[105][17]' (FDE) to 'level_3/buf_L_reg[105][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[104][17]' (FDE) to 'level_3/buf_L_reg[104][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[103][17]' (FDE) to 'level_3/buf_L_reg[103][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[102][17]' (FDE) to 'level_3/buf_L_reg[102][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[101][17]' (FDE) to 'level_3/buf_L_reg[101][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[100][17]' (FDE) to 'level_3/buf_L_reg[100][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[99][17]' (FDE) to 'level_3/buf_L_reg[99][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[98][17]' (FDE) to 'level_3/buf_L_reg[98][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[97][17]' (FDE) to 'level_3/buf_L_reg[97][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[96][17]' (FDE) to 'level_3/buf_L_reg[96][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[95][17]' (FDE) to 'level_3/buf_L_reg[95][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[94][17]' (FDE) to 'level_3/buf_L_reg[94][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[93][17]' (FDE) to 'level_3/buf_L_reg[93][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[92][17]' (FDE) to 'level_3/buf_L_reg[92][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[91][17]' (FDE) to 'level_3/buf_L_reg[91][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[90][17]' (FDE) to 'level_3/buf_L_reg[90][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[89][17]' (FDE) to 'level_3/buf_L_reg[89][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[88][17]' (FDE) to 'level_3/buf_L_reg[88][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[87][17]' (FDE) to 'level_3/buf_L_reg[87][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[86][17]' (FDE) to 'level_3/buf_L_reg[86][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[85][17]' (FDE) to 'level_3/buf_L_reg[85][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[84][17]' (FDE) to 'level_3/buf_L_reg[84][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[83][17]' (FDE) to 'level_3/buf_L_reg[83][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[82][17]' (FDE) to 'level_3/buf_L_reg[82][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[81][17]' (FDE) to 'level_3/buf_L_reg[81][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[80][17]' (FDE) to 'level_3/buf_L_reg[80][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[79][17]' (FDE) to 'level_3/buf_L_reg[79][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[78][17]' (FDE) to 'level_3/buf_L_reg[78][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[77][17]' (FDE) to 'level_3/buf_L_reg[77][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[76][17]' (FDE) to 'level_3/buf_L_reg[76][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[75][17]' (FDE) to 'level_3/buf_L_reg[75][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[74][17]' (FDE) to 'level_3/buf_L_reg[74][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[73][17]' (FDE) to 'level_3/buf_L_reg[73][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[72][17]' (FDE) to 'level_3/buf_L_reg[72][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[71][17]' (FDE) to 'level_3/buf_L_reg[71][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[70][17]' (FDE) to 'level_3/buf_L_reg[70][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[69][17]' (FDE) to 'level_3/buf_L_reg[69][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[68][17]' (FDE) to 'level_3/buf_L_reg[68][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[67][17]' (FDE) to 'level_3/buf_L_reg[67][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[66][17]' (FDE) to 'level_3/buf_L_reg[66][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[65][17]' (FDE) to 'level_3/buf_L_reg[65][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[64][17]' (FDE) to 'level_3/buf_L_reg[64][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[63][17]' (FDE) to 'level_3/buf_L_reg[63][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[62][17]' (FDE) to 'level_3/buf_L_reg[62][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[61][17]' (FDE) to 'level_3/buf_L_reg[61][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[60][17]' (FDE) to 'level_3/buf_L_reg[60][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[59][17]' (FDE) to 'level_3/buf_L_reg[59][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[58][17]' (FDE) to 'level_3/buf_L_reg[58][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[57][17]' (FDE) to 'level_3/buf_L_reg[57][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[56][17]' (FDE) to 'level_3/buf_L_reg[56][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[55][17]' (FDE) to 'level_3/buf_L_reg[55][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[54][17]' (FDE) to 'level_3/buf_L_reg[54][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[53][17]' (FDE) to 'level_3/buf_L_reg[53][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[52][17]' (FDE) to 'level_3/buf_L_reg[52][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[51][17]' (FDE) to 'level_3/buf_L_reg[51][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[50][17]' (FDE) to 'level_3/buf_L_reg[50][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[49][17]' (FDE) to 'level_3/buf_L_reg[49][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[48][17]' (FDE) to 'level_3/buf_L_reg[48][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[47][17]' (FDE) to 'level_3/buf_L_reg[47][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[46][17]' (FDE) to 'level_3/buf_L_reg[46][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[45][17]' (FDE) to 'level_3/buf_L_reg[45][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[44][17]' (FDE) to 'level_3/buf_L_reg[44][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[43][17]' (FDE) to 'level_3/buf_L_reg[43][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[42][17]' (FDE) to 'level_3/buf_L_reg[42][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[41][17]' (FDE) to 'level_3/buf_L_reg[41][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[40][17]' (FDE) to 'level_3/buf_L_reg[40][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[39][17]' (FDE) to 'level_3/buf_L_reg[39][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[38][17]' (FDE) to 'level_3/buf_L_reg[38][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[37][17]' (FDE) to 'level_3/buf_L_reg[37][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[36][17]' (FDE) to 'level_3/buf_L_reg[36][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[35][17]' (FDE) to 'level_3/buf_L_reg[35][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[34][17]' (FDE) to 'level_3/buf_L_reg[34][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[33][17]' (FDE) to 'level_3/buf_L_reg[33][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[32][17]' (FDE) to 'level_3/buf_L_reg[32][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[31][17]' (FDE) to 'level_3/buf_L_reg[31][18]'
+INFO: [Synth 8-3886] merging instance 'level_3/buf_L_reg[30][17]' (FDE) to 'level_3/buf_L_reg[30][18]'
+INFO: [Common 17-14] Message 'Synth 8-3886' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
+INFO: [Common 17-14] Message 'Synth 8-3886' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
+---------------------------------------------------------------------------------
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:01:01 ; elapsed = 00:01:28 . Memory (MB): peak = 1499.727 ; gain = 1021.973
+---------------------------------------------------------------------------------
+ Sort Area is science_guardrail__GC0 cent_bound0_0 : 0 0 : 3035 5772 : Used 1 time 0
+ Sort Area is science_guardrail__GC0 cent_bound0_0 : 0 1 : 2737 5772 : Used 1 time 0
+ Sort Area is science_guardrail__GC0 flux_bound0_3 : 0 0 : 3017 5738 : Used 1 time 0
+ Sort Area is science_guardrail__GC0 flux_bound0_3 : 0 1 : 2721 5738 : Used 1 time 0
+---------------------------------------------------------------------------------
+Start ROM, RAM, DSP, Shift Register and Retiming Reporting
+---------------------------------------------------------------------------------
+
+Block RAM: Preliminary Mapping Report (see note below)
++------------+-------------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+|Module Name | RTL Object                          | PORT A (Depth x Width) | W | R | PORT B (Depth x Width) | W | R | Ports driving FF | RAMB18 | RAMB36 | 
++------------+-------------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+|evaultr_top | u_cal/flat_bram_reg                 | 4 K x 16(READ_FIRST)   | W |   | 4 K x 16(WRITE_FIRST)  |   | R | Port A and B     | 0      | 2      | 
+|evaultr_top | u_cal/dark_bram_reg                 | 4 K x 16(READ_FIRST)   | W |   | 4 K x 16(WRITE_FIRST)  |   | R | Port A and B     | 0      | 2      | 
+|evaultr_top | u_escrow/meta_mem_reg[97][frame_id] | 128 x 32(READ_FIRST)   | W | R |                        |   |   | Port A           | 1      | 0      | 
++------------+-------------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+
+Note: The table above is a preliminary report that shows the Block RAMs at the current stage of the synthesis flow. Some Block RAMs may be reimplemented as non Block RAM primitives later in the synthesis flow. Multiple instantiated Block RAMs are reported only once. 
+
+Distributed RAM: Preliminary Mapping Report (see note below)
++------------+-------------------------------------+-----------+----------------------+----------------+
+|Module Name | RTL Object                          | Inference | Size (Depth x Width) | Primitives     | 
++------------+-------------------------------------+-----------+----------------------+----------------+
+|evaultr_top | u_escrow/meta_mem_reg[97][valid]    | Implied   | 128 x 1              | RAM128X1S x 1  | 
+|evaultr_top | u_escrow/meta_mem_reg[97][locked]   | Implied   | 128 x 1              | RAM128X1S x 1  | 
+|evaultr_top | u_escrow/meta_mem_reg[97][promoted] | Implied   | 128 x 1              | RAM128X1S x 1  | 
++------------+-------------------------------------+-----------+----------------------+----------------+
+
+Note: The table above is a preliminary report that shows the Distributed RAMs at the current stage of the synthesis flow. Some Distributed RAMs may be reimplemented as non Distributed RAM primitives later in the synthesis flow. Multiple instantiated RAMs are reported only once.
+
+DSP: Preliminary Mapping Report (see note below. The ' indicates corresponding REG is set)
++------------+-----------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
+|Module Name | DSP Mapping     | A Size | B Size | C Size | D Size | P Size | AREG | BREG | CREG | DREG | ADREG | MREG | PREG | 
++------------+-----------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
+|evaultr_top | A2*B            | 18     | 17     | -      | -      | 48     | 1    | 0    | -    | -    | -     | 0    | 0    | 
+|evaultr_top | (PCIN>>17)+A*B2 | 17     | 16     | -      | -      | 48     | 0    | 1    | -    | -    | -     | 0    | 0    | 
+|evaultr_top | A*B             | 18     | 17     | -      | -      | 48     | 0    | 0    | -    | -    | -     | 0    | 0    | 
+|evaultr_top | (PCIN>>17)+A*B  | 17     | 16     | -      | -      | 48     | 0    | 0    | -    | -    | -     | 0    | 0    | 
++------------+-----------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
+
+Note: The table above is a preliminary report that shows the DSPs inferred at the current stage of the synthesis flow. Some DSP may be reimplemented as non DSP primitives later in the synthesis flow. Multiple instantiated DSPs are reported only once.
+---------------------------------------------------------------------------------
+Finished ROM, RAM, DSP, Shift Register and Retiming Reporting
+---------------------------------------------------------------------------------
+No constraint files found.
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:01:04 ; elapsed = 00:01:31 . Memory (MB): peak = 1499.727 ; gain = 1021.973
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start ROM, RAM, DSP, Shift Register and Retiming Reporting
+---------------------------------------------------------------------------------
+
+Block RAM: Final Mapping Report
++------------+-------------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+|Module Name | RTL Object                          | PORT A (Depth x Width) | W | R | PORT B (Depth x Width) | W | R | Ports driving FF | RAMB18 | RAMB36 | 
++------------+-------------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+|evaultr_top | u_cal/flat_bram_reg                 | 4 K x 16(READ_FIRST)   | W |   | 4 K x 16(WRITE_FIRST)  |   | R | Port A and B     | 0      | 2      | 
+|evaultr_top | u_cal/dark_bram_reg                 | 4 K x 16(READ_FIRST)   | W |   | 4 K x 16(WRITE_FIRST)  |   | R | Port A and B     | 0      | 2      | 
+|evaultr_top | u_escrow/meta_mem_reg[97][frame_id] | 128 x 32(READ_FIRST)   | W | R |                        |   |   | Port A           | 1      | 0      | 
++------------+-------------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+
+
+Distributed RAM: Final Mapping Report
++------------+-------------------------------------+-----------+----------------------+----------------+
+|Module Name | RTL Object                          | Inference | Size (Depth x Width) | Primitives     | 
++------------+-------------------------------------+-----------+----------------------+----------------+
+|evaultr_top | u_escrow/meta_mem_reg[97][valid]    | Implied   | 128 x 1              | RAM128X1S x 1  | 
+|evaultr_top | u_escrow/meta_mem_reg[97][locked]   | Implied   | 128 x 1              | RAM128X1S x 1  | 
+|evaultr_top | u_escrow/meta_mem_reg[97][promoted] | Implied   | 128 x 1              | RAM128X1S x 1  | 
++------------+-------------------------------------+-----------+----------------------+----------------+
+
+---------------------------------------------------------------------------------
+Finished ROM, RAM, DSP, Shift Register and Retiming Reporting
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+INFO: [Synth 8-7052] The timing for the instance i_0/u_cal/dark_bram_reg_0 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance i_0/u_cal/dark_bram_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance i_0/u_escrow/meta_mem_reg[97][frame_id] (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance i_0/u_escrow/meta_mem_reg[97][frame_id] (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:01:05 ; elapsed = 00:01:33 . Memory (MB): peak = 1508.293 ; gain = 1030.539
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+INFO: [Synth 8-7052] The timing for the instance u_cal/dark_bram_reg_0 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance u_cal/dark_bram_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance u_escrow/meta_mem_reg[97][frame_id] (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance u_escrow/meta_mem_reg[97][frame_id] (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:01:10 ; elapsed = 00:01:39 . Memory (MB): peak = 1508.293 ; gain = 1030.539
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:01:10 ; elapsed = 00:01:39 . Memory (MB): peak = 1508.293 ; gain = 1030.539
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:01:10 ; elapsed = 00:01:39 . Memory (MB): peak = 1508.293 ; gain = 1030.539
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:01:11 ; elapsed = 00:01:39 . Memory (MB): peak = 1508.293 ; gain = 1030.539
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:01:11 ; elapsed = 00:01:40 . Memory (MB): peak = 1508.293 ; gain = 1030.539
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:01:11 ; elapsed = 00:01:40 . Memory (MB): peak = 1508.293 ; gain = 1030.539
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start ROM, RAM, DSP, Shift Register and Retiming Reporting
+---------------------------------------------------------------------------------
+
+Static Shift Register Report:
++------------+------------------------+--------+-------+--------------+--------------------+-------------------+--------+---------+
+|Module Name | RTL Name               | Length | Width | Reset Signal | Pull out first Reg | Pull out last Reg | SRL16E | SRLC32E | 
++------------+------------------------+--------+-------+--------------+--------------------+-------------------+--------+---------+
+|evaultr_top | u_cal/cal_last_row_reg | 4      | 1     | NO           | NO                 | YES               | 1      | 0       | 
+|evaultr_top | u_cal/cal_last_col_reg | 4      | 1     | NO           | NO                 | YES               | 1      | 0       | 
++------------+------------------------+--------+-------+--------------+--------------------+-------------------+--------+---------+
+
+---------------------------------------------------------------------------------
+Finished ROM, RAM, DSP, Shift Register and Retiming Reporting
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+Report BlackBoxes: 
++-+--------------+----------+
+| |BlackBox name |Instances |
++-+--------------+----------+
++-+--------------+----------+
+
+Report Cell Usage: 
++------+----------+------+
+|      |Cell      |Count |
++------+----------+------+
+|1     |BUFG      |     1|
+|2     |CARRY4    |   206|
+|3     |LUT1      |    60|
+|4     |LUT2      |   282|
+|5     |LUT3      |   579|
+|6     |LUT4      |    91|
+|7     |LUT5      |   214|
+|8     |LUT6      |  4627|
+|9     |MUXF7     |  1870|
+|10    |MUXF8     |   897|
+|11    |RAM128X1S |     3|
+|12    |RAMB18E1  |     1|
+|13    |RAMB36E1  |     4|
+|14    |SRL16E    |     2|
+|15    |FDCE      |   376|
+|16    |FDPE      |     2|
+|17    |FDRE      | 14539|
+|18    |FDSE      |    16|
+|19    |IBUF      |   113|
+|20    |OBUF      |     5|
++------+----------+------+
+
+Report Instance Areas: 
++------+----------------+-----------------------------+------+
+|      |Instance        |Module                       |Cells |
++------+----------------+-----------------------------+------+
+|1     |top             |                             | 23888|
+|2     |  u_cal         |calibration_engine           |   927|
+|3     |  u_dwt_2d      |dwt_2d_top                   | 22456|
+|4     |    level_1     |dwt_2d_level                 | 12947|
+|5     |      u_row_dwt |dwt_1d_haar                  |   695|
+|6     |    level_2     |dwt_2d_level__parameterized0 |  6980|
+|7     |      u_row_dwt |dwt_1d_haar__parameterized0  |   380|
+|8     |    level_3     |dwt_2d_level__parameterized1 |  2529|
+|9     |      u_row_dwt |dwt_1d_haar__parameterized1  |   189|
+|10    |  u_escrow      |escrow_controller            |   269|
+|11    |  u_resource    |resource_controller          |     2|
+|12    |  u_telemetry   |downlink_tx                  |   114|
++------+----------------+-----------------------------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:01:11 ; elapsed = 00:01:40 . Memory (MB): peak = 1508.293 ; gain = 1030.539
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 127 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:01:11 ; elapsed = 00:01:40 . Memory (MB): peak = 1508.293 ; gain = 1030.539
+Synthesis Optimization Complete : Time (s): cpu = 00:01:11 ; elapsed = 00:01:40 . Memory (MB): peak = 1508.293 ; gain = 1030.539
+INFO: [Project 1-571] Translating synthesized netlist
+Netlist sorting complete. Time (s): cpu = 00:00:01 ; elapsed = 00:00:00.141 . Memory (MB): peak = 1516.285 ; gain = 0.000
+INFO: [Netlist 29-17] Analyzing 2981 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.005 . Memory (MB): peak = 1521.875 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 3 instances were transformed.
+  RAM128X1S => RAM128X1S (MUXF7, RAMS64E(x2)): 3 instances
+
+Synth Design complete | Checksum: 7a43e5bf
+INFO: [Common 17-83] Releasing license: Synthesis
+157 Infos, 127 Warnings, 0 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:01:14 ; elapsed = 00:01:44 . Memory (MB): peak = 1521.875 ; gain = 1049.055
+Write ShapeDB Complete: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.020 . Memory (MB): peak = 1521.875 ; gain = 0.000
+INFO: [Common 17-1381] The checkpoint 'C:/Users/tagda/OneDrive/Desktop/GIT_HUB/EVAULT-R/event-vault-R/rtl/Hardwear_accelerators/Hardwear_accelerators.runs/synth_1/evaultr_top.dcp' has been generated.
+INFO: [runtcl-4] Executing : report_utilization -file evaultr_top_utilization_synth.rpt -pb evaultr_top_utilization_synth.pb
+INFO: [Common 17-206] Exiting Vivado at Tue Sep  1 22:20:11 2026...
