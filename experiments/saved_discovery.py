@@ -46,6 +46,7 @@ def run_saved_discovery():
     config.acquisition.frame_shape = frame_shape
     config.escrow.capacity = 70
     config.escrow.trigger_horizon_seconds = 3600.0
+    cfg.transient_position = [128, 128]
 
     print(f"\nParameters:")
     print(f"  Frames:           {cfg.num_frames}")
