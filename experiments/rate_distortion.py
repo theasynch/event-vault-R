@@ -32,7 +32,7 @@ from eventvault.codec.dwt import decompose, reconstruct, compute_compression_rat
 from eventvault.science.source_extraction import extract_sources, measure_source
 
 
-def run_rate_distortion():
+def run_rate_distortion(sequence=None):
     """Run the rate-distortion analysis experiment."""
     print("=" * 70)
     print("EventVault-R: Rate-Distortion Analysis")
@@ -40,7 +40,6 @@ def run_rate_distortion():
     print("=" * 70)
 
     frame_shape = (256, 256)
-    num_images = 10
     wavelet_bases = ["haar", "db4", "bior4.4"]
     epsilon_F_target = 0.005  # 0.5%
     epsilon_x_target = 0.1   # 0.1 pixel
@@ -48,8 +47,23 @@ def run_rate_distortion():
     results = {wb: {"CR": [], "delta_F": [], "delta_x": []}
                for wb in wavelet_bases}
 
-    rng = np.random.default_rng(42)
-    static_sources = generate_static_sources(30, frame_shape, rng=rng)
+    if sequence is None:
+        num_images = 10
+        rng = np.random.default_rng(None)
+        static_sources = generate_static_sources(30, frame_shape, rng=rng)
+        frames_to_use = []
+        for img_idx in range(num_images):
+            f, m = generate_frame(
+                frame_id=img_idx,
+                timestamp=float(img_idx * 30),
+                frame_shape=frame_shape,
+                static_sources=static_sources,
+                rng=np.random.default_rng(img_idx + 1000),
+            )
+            frames_to_use.append((f, m))
+    else:
+        frames_to_use = sequence[:10]
+        num_images = len(frames_to_use)
 
     print(f"\nConfiguration:")
     print(f"  Frame shape:  {frame_shape}")
@@ -66,15 +80,7 @@ def run_rate_distortion():
         all_df = {d: [] for d in range(4)}
         all_dx = {d: [] for d in range(4)}
 
-        for img_idx in range(num_images):
-            # Generate a test image
-            frame, metadata = generate_frame(
-                frame_id=img_idx,
-                timestamp=float(img_idx * 30),
-                frame_shape=frame_shape,
-                static_sources=static_sources,
-                rng=np.random.default_rng(img_idx + 1000),
-            )
+        for img_idx, (frame, metadata) in enumerate(frames_to_use):
             image = frame.astype(np.float64)
 
             # Full decomposition
@@ -103,19 +109,21 @@ def run_rate_distortion():
                     pos = (int(round(ref_src.y_centroid)),
                            int(round(ref_src.x_centroid)))
                     if (0 <= pos[0] < h and 0 <= pos[1] < w):
+                        # Use measure_source on original image to establish the true baseline
+                        ref_meas = measure_source(image, pos)
                         meas = measure_source(recon, pos)
 
                         # ΔF (Eq. 22)
-                        if abs(ref_src.flux) > 1e-10:
-                            df = abs(meas.flux - ref_src.flux) / abs(ref_src.flux)
+                        if abs(ref_meas.flux) > 1e-10:
+                            df = abs(meas.flux - ref_meas.flux) / abs(ref_meas.flux)
                         else:
                             df = 0.0
                         flux_errors.append(df)
 
                         # Δx (Eq. 23)
                         dx = np.sqrt(
-                            (meas.x_centroid - ref_src.x_centroid) ** 2 +
-                            (meas.y_centroid - ref_src.y_centroid) ** 2
+                            (meas.x_centroid - ref_meas.x_centroid) ** 2 +
+                            (meas.y_centroid - ref_meas.y_centroid) ** 2
                         )
                         centroid_errors.append(dx)
 
@@ -239,6 +247,13 @@ def run_rate_distortion():
     print(f"\n  Targets: εF ≤ {epsilon_F_target * 100}%, εx ≤ {epsilon_x_target} px")
     print(f"  Minimum compression target: ≥ 50% data reduction (CR ≥ 2.0)")
     print("\nExperiment complete.")
+
+    try:
+        import sys
+        if sys.platform == "win32":
+            os.startfile(plot_path)
+    except Exception:
+        pass
 
 
 if __name__ == "__main__":
