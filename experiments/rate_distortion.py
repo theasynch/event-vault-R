@@ -249,11 +249,11 @@ def run_rate_distortion(sequence=None):
     print("\nExperiment complete.")
 
     try:
-        import sys
+        import sys, subprocess
         if sys.platform == "win32":
-            os.startfile(plot_path)
-    except Exception:
-        pass
+            subprocess.Popen(['start', 'chrome', os.path.abspath(plot_path)], shell=True)
+    except Exception as e:
+        print(f"Could not automatically open image in Chrome: {e}")
 
 
 if __name__ == "__main__":

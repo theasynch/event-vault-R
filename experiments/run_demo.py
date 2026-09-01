@@ -29,6 +29,7 @@ from eventvault.codec.dwt import decompose, reconstruct, compute_compression_rat
 from eventvault.config import load_config
 from eventvault.pipeline import EventVaultPipeline
 from eventvault.science.source_extraction import measure_source
+from experiments.rate_distortion import run_rate_distortion
 
 
 def run_saved_discovery():
@@ -69,7 +70,7 @@ def run_saved_discovery():
         transient_start_frame=cfg.transient_start_frame,
         transient_peak_flux=cfg.transient_peak_flux,
         transient_rise_time_frames=cfg.transient_rise_time_frames,
-        seed=42,
+        seed=None,
     )
 
     # ─────────────────────────────────────────────────────────
@@ -215,7 +216,80 @@ def run_saved_discovery():
     print(f"  Saved: {plot_path}")
     plt.close()
 
+    # ─────────────────────────────────────────────────────────
+    # 5. Visual Storyboard
+    # ─────────────────────────────────────────────────────────
+    print("\nGenerating visual storyboard...")
+    frames_to_plot = [
+        cfg.transient_start_frame, 
+        cfg.transient_start_frame + 5, 
+        cfg.transient_start_frame + 10, 
+        cfg.transient_detect_frame
+    ]
+    num_frames = len(frames_to_plot)
+    
+    fig, axes = plt.subplots(1, num_frames, figsize=(4 * num_frames, 4.5))
+    if num_frames == 1:
+        axes = [axes]
+        
+    for ax, frame_id in zip(axes, frames_to_plot):
+        if frame_id >= len(sequence):
+            continue
+            
+        frame, metadata = sequence[frame_id]
+        image = frame.astype(np.float64)
+        meas = measure_source(image, transient_pos, aperture_radius=5.0)
+        display = np.log1p(np.clip(image, 0, None))
+        
+        ax.imshow(display, cmap="magma")
+        
+        is_detected = meas.flux > detection_threshold
+        circle_color = "#2ecc71" if is_detected else "#f39c12"
+        linestyle = "-" if is_detected else "--"
+        
+        # transient_pos is (y, x), scatter expects (x, y)
+        ax.scatter([transient_pos[1]], [transient_pos[0]], s=200, facecolors="none",
+                   edgecolors=circle_color, linewidths=2.0, linestyle=linestyle)
+
+        title = f"Frame T{frame_id}"
+        if frame_id == cfg.transient_start_frame:
+            title += "\n(Transient Begins)"
+        elif frame_id == cfg.transient_detect_frame:
+            title += "\n(Confident Detection)"
+        elif is_detected:
+            title += "\n(Above Threshold)"
+        else:
+            title += "\n(Pre-Detection)"
+            
+        ax.set_title(title, fontsize=12, pad=10)
+        ax.text(0.05, 0.05, f"Flux: {meas.flux:.0f} ADU", 
+                transform=ax.transAxes, color="white", 
+                fontsize=10, fontweight="bold",
+                bbox=dict(facecolor='black', alpha=0.6, edgecolor='none', boxstyle='round,pad=0.3'))
+        ax.axis("off")
+
+    plt.suptitle("EventVault-R Saved Discovery: Progressive Transient Emergence",
+                 fontsize=16, fontweight="bold", y=1.05)
+    plt.tight_layout()
+    vis_path = os.path.join(output_dir, "transient_visualization.png")
+    plt.savefig(vis_path, dpi=200, bbox_inches="tight")
+    print(f"  Saved: {vis_path}")
+    plt.close()
+
     print("\nExperiment complete.")
+    try:
+        import sys, subprocess
+        if sys.platform == "win32":
+            subprocess.Popen(['start', 'chrome', os.path.abspath(plot_path)], shell=True)
+            subprocess.Popen(['start', 'chrome', os.path.abspath(vis_path)], shell=True)
+    except Exception as e:
+        print(f"Could not automatically open images in Chrome: {e}")
+
+    print("\n" + "─" * 70)
+    print("Running Rate-Distortion Analysis on the SAME generated data...")
+    print("─" * 70)
+    run_rate_distortion(sequence=sequence)
+
     return ev_recovery_rate, naive_recovery_rate
 
 
