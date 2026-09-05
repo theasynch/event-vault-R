@@ -180,6 +180,7 @@ class TestMultipleImageSizes:
         (64, 64), (128, 128), (256, 256), (512, 512),
         (128, 256), (256, 128),
     ])
+    @pytest.mark.filterwarnings("ignore:Level value of.*is too high:UserWarning")
     def test_roundtrip_various_sizes(self, shape):
         """Round-trip should work for various image sizes."""
         rng = np.random.default_rng(42)

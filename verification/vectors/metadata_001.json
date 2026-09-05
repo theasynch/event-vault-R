@@ -1,0 +1,9 @@
+{
+  "wavelet": "haar",
+  "levels": 3,
+  "mode": "symmetric",
+  "original_shape": [
+    64,
+    64
+  ]
+}
