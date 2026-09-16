@@ -40,10 +40,19 @@ module science_guardrail #(
     // -------------------------------------------------------------------------
     // 1. Line Buffers for 5x5 Window
     // -------------------------------------------------------------------------
-    logic [$clog2(LINE_COLS)-1:0] rd_col;
-    logic [PIXEL_W-1:0]           rd_data [0:4]; // 5 lines
+    logic [5*PIXEL_W-1:0] rd_data_flat;
+    logic [PIXEL_W-1:0]   rd_data [0:4]; // 5 lines
+    
+    // Unpack flat array
+    genvar g;
+    generate
+        for (g = 0; g < 5; g++) begin : gen_unpack
+            assign rd_data[g] = rd_data_flat[g*PIXEL_W +: PIXEL_W];
+        end
+    endgenerate
 
     logic [$clog2(LINE_COLS)-1:0] col_cnt, row_cnt;
+    logic [$clog2(LINE_COLS)-1:0] rd_col;
 
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -71,7 +80,7 @@ module science_guardrail #(
         .wr_en   (in_valid),
         .wr_data (in_data),
         .rd_col  (rd_col),
-        .rd_data (rd_data)
+        .rd_data_flat (rd_data_flat)
     );
 
     // -------------------------------------------------------------------------
@@ -99,10 +108,11 @@ module science_guardrail #(
         end
     end
 
-    // Center pixel is win[2][2], corresponding to (col_cnt-2, row_cnt-2)
+    // Center pixel is win[2][2], corresponding to (col_cnt-3, row_cnt-2)
+    // col_cnt-3 because win gets shifted at the END of the cycle.
     logic [9:0] center_x, center_y;
     always_comb begin
-        center_x = col_cnt - 2;
+        center_x = col_cnt - 3;
         center_y = row_cnt - 2;
     end
 

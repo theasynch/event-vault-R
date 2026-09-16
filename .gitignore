@@ -25,3 +25,4 @@ results/*.csv
 # Temporary
 pdf_content.txt
 *.log
+*.vvp

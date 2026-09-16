@@ -1,5 +1,6 @@
 {
   "wavelet": "bior4.4",
+  "format": "Q16.16",
   "levels": 3,
   "mode": "symmetric",
   "original_shape": [
@@ -10,16 +11,16 @@
     15,
     15
   ],
-  "h1_shape": [
-    15,
-    15
+  "level_1_shape": [
+    36,
+    36
   ],
-  "h2_shape": [
+  "level_2_shape": [
     22,
     22
   ],
-  "h3_shape": [
-    36,
-    36
+  "level_3_shape": [
+    15,
+    15
   ]
 }

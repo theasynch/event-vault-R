@@ -1,143 +1,233 @@
 // =============================================================================
-//  dwt_1d_bior.sv — 1-D Biorthogonal 4.4 / db4 Discrete Wavelet Transform
+//  dwt_1d_bior.sv — 1-D Biorthogonal 4.4 DWT with Symmetric Boundary
 //  EventVault-R Accelerator — DWT Engine
 //  Target: Intel Cyclone V (DE1-SoC)
 //
-//  Computes the 1-D DWT using convolution (polyphase FIR).
-//  Matches the C++ Q16.16 Fixed-Point Reference.
+//  Implements the EXACT algorithm from dwt_fixed.cpp conv1d_dwt():
+//    out_len = (N + F - 1) / 2   where F = 10
+//    for k = 0 .. out_len-1:
+//        for j = 0 .. F-1:
+//            i = 2*k + 1 - j
+//            i = symmetric_reflect(i, N)
+//            s_lo += x[i] * f_lo[j]
+//            s_hi += x[i] * f_hi[j]
+//        out_lo[k] = s_lo >> 16
+//        out_hi[k] = s_hi >> 16
 //
-//  dec_lo = [0, 2479, -1563, -7250, 24733, 55882, 24733, -7250, -1563, 2479]
-//  dec_hi = [0, -4229, 2666, 27400, -51674, 27400, 2666, -4229, 0, 0]
+//  Architecture: Block-based (store row, then compute).
 // =============================================================================
 
 module dwt_1d_bior #(
-    parameter int Q_FRACT_W = 16,
-    parameter int IN_W      = 32,
-    parameter int OUT_W     = 32
+    parameter Q_FRACT_W = 16,
+    parameter IN_W      = 32,
+    parameter OUT_W     = 32,
+    parameter MAX_N     = 1024
 )(
-    input  logic             clk,
-    input  logic             rst_n,
+    input  wire             clk,
+    input  wire             rst_n,
 
-    // ---- Streaming input ------------------------------------------------
-    input  logic             in_valid,
-    input  logic [IN_W-1:0]  in_data,
-    input  logic             in_last,
-    output logic             in_ready,
+    input  wire [10:0]      cfg_N,
 
-    // ---- Low-pass output ------------------------------------------------
-    output logic             lo_valid,
-    output logic [OUT_W-1:0] lo_data,
-    output logic             lo_last,
+    input  wire             in_valid,
+    input  wire signed [IN_W-1:0]  in_data,
+    input  wire             in_last,
+    output reg              in_ready,
 
-    // ---- High-pass output -----------------------------------------------
-    output logic             hi_valid,
-    output logic [OUT_W-1:0] hi_data,
-    output logic             hi_last
+    output reg              lo_valid,
+    output reg signed [OUT_W-1:0] lo_data,
+    output reg              lo_last,
+
+    output reg              hi_valid,
+    output reg signed [OUT_W-1:0] hi_data,
+    output reg              hi_last
 );
 
-    // Q16.16 Bior4.4 Coefficients
-    localparam signed [IN_W-1:0] L0 = 0, L1 = 2479, L2 = -1563, L3 = -7250, L4 = 24733, L5 = 55882, L6 = 24733, L7 = -7250, L8 = -1563, L9 = 2479;
-    localparam signed [IN_W-1:0] H0 = 0, H1 = -4229, H2 = 2666, H3 = 27400, H4 = -51674, H5 = 27400, H6 = 2666, H7 = -4229, H8 = 0, H9 = 0;
+    // Q16.16 Bior4.4 Coefficients (stored as individual parameters)
+    localparam signed [31:0] L0_C =  32'sd0;
+    localparam signed [31:0] L1_C =  32'sd2479;
+    localparam signed [31:0] L2_C = -32'sd1563;
+    localparam signed [31:0] L3_C = -32'sd7250;
+    localparam signed [31:0] L4_C =  32'sd24733;
+    localparam signed [31:0] L5_C =  32'sd55882;
+    localparam signed [31:0] L6_C =  32'sd24733;
+    localparam signed [31:0] L7_C = -32'sd7250;
+    localparam signed [31:0] L8_C = -32'sd1563;
+    localparam signed [31:0] L9_C =  32'sd2479;
 
-    // Shift Register (10 taps)
-    logic signed [IN_W-1:0] shift_reg [0:9];
-    logic                   phase; // 0 = even, 1 = odd
-    
-    // Multipliers (Pipeline Stage 1)
-    logic signed [63:0] mult_lo [0:9];
-    logic signed [63:0] mult_hi [0:9];
-    logic               stg1_valid;
-    logic               stg1_last;
+    localparam signed [31:0] H0_C =  32'sd0;
+    localparam signed [31:0] H1_C = -32'sd4229;
+    localparam signed [31:0] H2_C =  32'sd2666;
+    localparam signed [31:0] H3_C =  32'sd27400;
+    localparam signed [31:0] H4_C = -32'sd51674;
+    localparam signed [31:0] H5_C =  32'sd27400;
+    localparam signed [31:0] H6_C =  32'sd2666;
+    localparam signed [31:0] H7_C = -32'sd4229;
+    localparam signed [31:0] H8_C =  32'sd0;
+    localparam signed [31:0] H9_C =  32'sd0;
 
-    // Accumulators (Pipeline Stage 2)
-    logic signed [63:0] sum_lo;
-    logic signed [63:0] sum_hi;
-    logic               stg2_valid;
-    logic               stg2_last;
+    localparam F = 10;
 
-    always_ff @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
-            phase <= 1'b0;
-            stg1_valid <= 1'b0;
-            stg2_valid <= 1'b0;
-            lo_valid <= 1'b0;
-            hi_valid <= 1'b0;
-            for (int i=0; i<10; i++) shift_reg[i] <= '0;
-        end else begin
-            // -----------------------------------------------------------------
-            // Input Stage (Shift Register)
-            // -----------------------------------------------------------------
-            if (in_valid) begin
-                for (int i=9; i>0; i--) begin
-                    shift_reg[i] <= shift_reg[i-1];
-                end
-                shift_reg[0] <= in_data;
-                
-                if (phase == 1'b1) begin
-                    // Odd sample received -> Compute
-                    phase <= 1'b0;
-                    stg1_valid <= 1'b1;
-                    stg1_last  <= in_last;
-                end else begin
-                    phase <= 1'b1;
-                    stg1_valid <= 1'b0;
-                    stg1_last  <= 1'b0;
-                end
-            end else begin
-                stg1_valid <= 1'b0;
-                stg1_last  <= 1'b0;
-            end
+    // Input buffer
+    reg signed [IN_W-1:0] x_buf [0:MAX_N-1];
+    reg [10:0] wr_ptr;
+    reg [10:0] N_reg;
+    reg [10:0] out_len;
 
-            // -----------------------------------------------------------------
-            // Pipeline Stage 1: Multiply
-            // -----------------------------------------------------------------
-            if (stg1_valid) begin
-                // Note: Array indexing matches C++ formula: x[2k+1-j] * f[j]
-                // shift_reg[0] is x[2k+1] (j=0)
-                // shift_reg[9] is x[2k-8] (j=9)
-                mult_lo[0] <= shift_reg[0] * L0;
-                mult_lo[1] <= shift_reg[1] * L1;
-                mult_lo[2] <= shift_reg[2] * L2;
-                mult_lo[3] <= shift_reg[3] * L3;
-                mult_lo[4] <= shift_reg[4] * L4;
-                mult_lo[5] <= shift_reg[5] * L5;
-                mult_lo[6] <= shift_reg[6] * L6;
-                mult_lo[7] <= shift_reg[7] * L7;
-                mult_lo[8] <= shift_reg[8] * L8;
-                mult_lo[9] <= shift_reg[9] * L9;
+    // State machine
+    localparam [2:0] S_IDLE    = 3'd0;
+    localparam [2:0] S_LOAD    = 3'd1;
+    localparam [2:0] S_COMPUTE = 3'd2;
+    localparam [2:0] S_OUTPUT  = 3'd3;
+    localparam [2:0] S_DONE    = 3'd4;
 
-                mult_hi[0] <= shift_reg[0] * H0;
-                mult_hi[1] <= shift_reg[1] * H1;
-                mult_hi[2] <= shift_reg[2] * H2;
-                mult_hi[3] <= shift_reg[3] * H3;
-                mult_hi[4] <= shift_reg[4] * H4;
-                mult_hi[5] <= shift_reg[5] * H5;
-                mult_hi[6] <= shift_reg[6] * H6;
-                mult_hi[7] <= shift_reg[7] * H7;
-                mult_hi[8] <= shift_reg[8] * H8;
-                mult_hi[9] <= shift_reg[9] * H9;
-            end
-            stg2_valid <= stg1_valid;
-            stg2_last  <= stg1_last;
+    reg [2:0] state;
+    reg [10:0] k_cnt;
+    reg [3:0]  j_cnt;
+    reg signed [63:0] acc_lo, acc_hi;
 
-            // -----------------------------------------------------------------
-            // Pipeline Stage 2: Accumulate & Shift
-            // -----------------------------------------------------------------
-            if (stg2_valid) begin
-                sum_lo <= mult_lo[0] + mult_lo[1] + mult_lo[2] + mult_lo[3] + mult_lo[4] + mult_lo[5] + mult_lo[6] + mult_lo[7] + mult_lo[8] + mult_lo[9];
-                sum_hi <= mult_hi[0] + mult_hi[1] + mult_hi[2] + mult_hi[3] + mult_hi[4] + mult_hi[5] + mult_hi[6] + mult_hi[7] + mult_hi[8] + mult_hi[9];
-                
-                // Shift down by Q_FRACT_W (16)
-                lo_data <= (mult_lo[0] + mult_lo[1] + mult_lo[2] + mult_lo[3] + mult_lo[4] + mult_lo[5] + mult_lo[6] + mult_lo[7] + mult_lo[8] + mult_lo[9]) >>> Q_FRACT_W;
-                hi_data <= (mult_hi[0] + mult_hi[1] + mult_hi[2] + mult_hi[3] + mult_hi[4] + mult_hi[5] + mult_hi[6] + mult_hi[7] + mult_hi[8] + mult_hi[9]) >>> Q_FRACT_W;
-            end
-            lo_valid <= stg2_valid;
-            hi_valid <= stg2_valid;
-            lo_last  <= stg2_last;
-            hi_last  <= stg2_last;
-        end
+    // Address calculation for symmetric boundary reflection
+    wire signed [12:0] raw_idx;
+    reg [10:0] refl_idx;
+
+    // Must use signed arithmetic: 2*k+1-j can be negative
+    assign raw_idx = $signed({2'b0, k_cnt}) * 2 + 1 - $signed({9'b0, j_cnt});
+
+    // Multi-pass reflection (C++ uses while loop; we unroll 2 passes)
+    reg signed [12:0] pass1;
+    always @(*) begin
+        // Pass 1
+        if (raw_idx < 0)
+            pass1 = -1 - raw_idx;
+        else if (raw_idx >= $signed({2'b0, N_reg}))
+            pass1 = 2 * $signed({2'b0, N_reg}) - 1 - raw_idx;
+        else
+            pass1 = raw_idx;
+
+        // Pass 2 (needed when F > N)
+        if (pass1 < 0)
+            refl_idx = -1 - pass1;
+        else if (pass1 >= $signed({2'b0, N_reg}))
+            refl_idx = 2 * N_reg - 1 - pass1;
+        else
+            refl_idx = pass1[10:0];
     end
 
-    assign in_ready = 1'b1;
+    // Read sample and get coefficient
+    wire signed [IN_W-1:0] x_val;
+    assign x_val = x_buf[refl_idx];
+
+    // Coefficient lookup
+    reg signed [31:0] coeff_lo, coeff_hi;
+    always @(*) begin
+        case (j_cnt)
+            4'd0: begin coeff_lo = L0_C; coeff_hi = H0_C; end
+            4'd1: begin coeff_lo = L1_C; coeff_hi = H1_C; end
+            4'd2: begin coeff_lo = L2_C; coeff_hi = H2_C; end
+            4'd3: begin coeff_lo = L3_C; coeff_hi = H3_C; end
+            4'd4: begin coeff_lo = L4_C; coeff_hi = H4_C; end
+            4'd5: begin coeff_lo = L5_C; coeff_hi = H5_C; end
+            4'd6: begin coeff_lo = L6_C; coeff_hi = H6_C; end
+            4'd7: begin coeff_lo = L7_C; coeff_hi = H7_C; end
+            4'd8: begin coeff_lo = L8_C; coeff_hi = H8_C; end
+            4'd9: begin coeff_lo = L9_C; coeff_hi = H9_C; end
+            default: begin coeff_lo = 0; coeff_hi = 0; end
+        endcase
+    end
+
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            state    <= S_IDLE;
+            wr_ptr   <= 0;
+            k_cnt    <= 0;
+            j_cnt    <= 0;
+            acc_lo   <= 0;
+            acc_hi   <= 0;
+            lo_valid <= 1'b0;
+            hi_valid <= 1'b0;
+            lo_last  <= 1'b0;
+            hi_last  <= 1'b0;
+            in_ready <= 1'b1;
+            N_reg    <= 0;
+            out_len  <= 0;
+        end else begin
+            lo_valid <= 1'b0;
+            hi_valid <= 1'b0;
+
+            case (state)
+                S_IDLE: begin
+                    in_ready <= 1'b1;
+                    wr_ptr   <= 0;
+                    k_cnt    <= 0;
+                    if (in_valid) begin
+                        x_buf[0] <= in_data;
+                        wr_ptr   <= 1;
+                        N_reg    <= cfg_N;
+                        out_len  <= (cfg_N + F - 1) / 2;
+                        if (in_last) begin
+                            state    <= S_COMPUTE;
+                            in_ready <= 1'b0;
+                            j_cnt    <= 0;
+                            acc_lo   <= 0;
+                            acc_hi   <= 0;
+                        end else begin
+                            state <= S_LOAD;
+                        end
+                    end
+                end
+
+                S_LOAD: begin
+                    in_ready <= 1'b1;
+                    if (in_valid) begin
+                        x_buf[wr_ptr] <= in_data;
+                        wr_ptr <= wr_ptr + 1;
+                        if (in_last) begin
+                            state    <= S_COMPUTE;
+                            in_ready <= 1'b0;
+                            j_cnt    <= 0;
+                            acc_lo   <= 0;
+                            acc_hi   <= 0;
+                        end
+                    end
+                end
+
+                S_COMPUTE: begin
+                    in_ready <= 1'b0;
+                    acc_lo <= acc_lo + (x_val * coeff_lo);
+                    acc_hi <= acc_hi + (x_val * coeff_hi);
+
+                    if (j_cnt == F - 1) begin
+                        state <= S_OUTPUT;
+                    end else begin
+                        j_cnt <= j_cnt + 1;
+                    end
+                end
+
+                S_OUTPUT: begin
+                    lo_valid <= 1'b1;
+                    hi_valid <= 1'b1;
+                    lo_data  <= acc_lo >>> Q_FRACT_W;
+                    hi_data  <= acc_hi >>> Q_FRACT_W;
+                    lo_last  <= (k_cnt == out_len - 1);
+                    hi_last  <= (k_cnt == out_len - 1);
+
+                    if (k_cnt == out_len - 1) begin
+                        state <= S_DONE;
+                    end else begin
+                        k_cnt  <= k_cnt + 1;
+                        j_cnt  <= 0;
+                        acc_lo <= 0;
+                        acc_hi <= 0;
+                        state  <= S_COMPUTE;
+                    end
+                end
+
+                S_DONE: begin
+                    state    <= S_IDLE;
+                    in_ready <= 1'b1;
+                    k_cnt    <= 0;
+                end
+            endcase
+        end
+    end
 
 endmodule

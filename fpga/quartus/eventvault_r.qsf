@@ -1,0 +1,14 @@
+set_global_assignment -name FAMILY "Cyclone V"
+set_global_assignment -name DEVICE 5CSEMA5F31C6
+set_global_assignment -name TOP_LEVEL_ENTITY evaultr_top
+set_global_assignment -name ORIGINAL_QUARTUS_VERSION 20.1.1
+set_global_assignment -name PROJECT_CREATION_TIME_DATE "12:00:00  SEPTEMBER 16, 2026"
+set_global_assignment -name LAST_QUARTUS_VERSION "20.1.1 Lite Edition"
+
+# Source files
+set_global_assignment -name SYSTEMVERILOG_FILE ../rtl/evaultr_top.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ../rtl/dwt/dwt_2d_top.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ../rtl/dwt/dwt_2d_level.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ../rtl/dwt/dwt_1d_bior.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ../rtl/buffers/line_buffer.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ../rtl/guardrail/science_guardrail.sv

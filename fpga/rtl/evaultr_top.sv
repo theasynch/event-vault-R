@@ -105,10 +105,57 @@ module evaultr_top #(
     // =========================================================================
     // In Phase C, these modules will consume s_axis and produce m_axis.
     
-    // Pass-through for now to satisfy AXI-Stream interface requirements
-    assign s_axis_tready = m_axis_tready;
-    assign m_axis_tdata  = s_axis_tdata;
-    assign m_axis_tvalid = s_axis_tvalid;
-    assign m_axis_tlast  = s_axis_tlast;
+    // 1. 2D DWT Module
+    wire dwt_out_valid;
+    wire signed [31:0] dwt_out_L0;
+    wire dwt_out_done;
+    
+    // Extract AXI-Stream signals
+    wire in_last_col = s_axis_tlast; // Simplified mapping for now
+    wire in_last_row = s_axis_tlast; // Needs properly generated last_row
+
+    dwt_2d_top dwt_inst (
+        .clk(clk),
+        .rst_n(rst_n),
+        .in_valid(s_axis_tvalid),
+        .in_data(s_axis_tdata),
+        .in_last_col(in_last_col),
+        .in_last_row(in_last_row),
+        .in_ready(s_axis_tready),
+        .l0_valid(dwt_out_valid),
+        .l0_data(dwt_out_L0),
+        .l0_done(dwt_out_done)
+    );
+
+    // 2. Science Guardrail Evaluator
+    wire guardrail_valid;
+    wire is_safe;
+
+    science_guardrail #(
+        .PIXEL_W(32),
+        .LINE_COLS(64)
+    ) guardrail_inst (
+        .clk(clk),
+        .rst_n(rst_n),
+        .in_valid(dwt_out_valid),
+        .in_data(dwt_out_L0),
+        .in_last_col(1'b0), // Not fully used for evaluating bounds unless specifically tracked
+        .in_last_row(dwt_out_done),
+        .check_en(1'b1),
+        .ref_x(10'd0),
+        .ref_y(10'd0),
+        .ref_flux(32'd0),
+        .eps_flux_q15(reg_epsilon_f[15:0]),
+        .eps_cent_q15(reg_epsilon_x[15:0]),
+        .decision_valid(guardrail_valid),
+        .is_safe(is_safe)
+    );
+
+    // Update AXI-Stream Master Interface to output DWT L0 data for now
+    // We append the guardrail safe status to the highest bit (or similar).
+    // Let's just output L0 data directly.
+    assign m_axis_tvalid = dwt_out_valid;
+    assign m_axis_tdata  = dwt_out_L0;
+    assign m_axis_tlast  = dwt_out_done;
 
 endmodule

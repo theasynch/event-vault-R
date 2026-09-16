@@ -30,7 +30,7 @@ module line_buffer #(
 
     // Read port — same column from each of the NUM_LINES most recent rows
     input  logic [COL_ADDR_W-1:0] rd_col,          // column address for reads
-    output logic [PIXEL_W-1:0]    rd_data [0:NUM_LINES-1]
+    output logic [NUM_LINES*PIXEL_W-1:0] rd_data_flat
 );
 
     // -------------------------------------------------------------------------
@@ -66,9 +66,18 @@ module line_buffer #(
     // -------------------------------------------------------------------------
     logic [PIXEL_W-1:0] mem [0:NUM_LINES-1][0:LINE_COLS-1];
 
+    initial begin
+        for (int i=0; i<NUM_LINES; i++) begin
+            for (int j=0; j<LINE_COLS; j++) begin
+                mem[i][j] = 0;
+            end
+        end
+    end
+
     always_ff @(posedge clk) begin
-        if (wr_en)
+        if (wr_en) begin
             mem[wr_line][wr_col] <= wr_data;
+        end
     end
 
     // -------------------------------------------------------------------------
@@ -82,8 +91,11 @@ module line_buffer #(
             logic [$clog2(NUM_LINES)-1:0] slot;
             // slot rotates: newest line is at wr_line (just written to)
             // previous line is at (wr_line - 1) mod NUM_LINES, etc.
-            assign slot = (wr_line - g + NUM_LINES) % NUM_LINES;
-            assign rd_data[g] = mem[slot][rd_col];
+            assign slot = (wr_line + NUM_LINES - (g % NUM_LINES)) % NUM_LINES;
+            
+            // Forward wr_data if we are reading the line we are currently writing
+            assign rd_data_flat[g*PIXEL_W +: PIXEL_W] = 
+                (wr_en && (slot == wr_line) && (rd_col == wr_col)) ? wr_data : mem[slot][rd_col];
         end
     endgenerate
 
