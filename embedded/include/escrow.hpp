@@ -2,6 +2,7 @@
 
 #include "dwt.hpp"
 #include <map>
+#include <cstddef>
 #include <vector>
 #include <list>
 #include <memory>
@@ -110,7 +111,7 @@ public:
 
 class EscrowBuffer {
 public:
-    EscrowBuffer(int capacity = 100, double trigger_horizon_seconds = 1800.0);
+    EscrowBuffer(size_t capacity = 100, double trigger_horizon_seconds = 1800.0);
     
     EscrowEntry* push(
         int frame_id,
@@ -142,7 +143,7 @@ public:
 private:
     bool evict_one(double current_time);
 
-    int _capacity;
+    size_t _capacity;
     double _trigger_horizon_seconds;
     
     std::list<EscrowEntry> _entries;

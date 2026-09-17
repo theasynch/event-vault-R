@@ -1,6 +1,8 @@
 #include "pipeline.hpp"
 #include <chrono>
 #include <iostream>
+#include <algorithm>
+#include <cmath>
 
 namespace eventvault {
 namespace pipeline {

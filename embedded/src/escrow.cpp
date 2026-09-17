@@ -4,7 +4,7 @@
 namespace eventvault {
 namespace escrow {
 
-EscrowBuffer::EscrowBuffer(int capacity, double trigger_horizon_seconds)
+EscrowBuffer::EscrowBuffer(size_t capacity, double trigger_horizon_seconds)
     : _capacity(capacity), _trigger_horizon_seconds(trigger_horizon_seconds) {}
 
 EscrowEntry* EscrowBuffer::push(

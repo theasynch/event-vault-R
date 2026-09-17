@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <string>
+#include <cstddef>
 #include <map>
 #include <cstdint>
 #include "dwt.hpp" // For Matrix2D compatibility routines
@@ -44,14 +45,14 @@ public:
         rows = src.rows;
         cols = src.cols;
         data.resize(rows * cols);
-        for (int i = 0; i < src.data.size(); ++i) {
+        for (size_t i = 0; i < src.data.size(); ++i) {
             data[i] = double_to_q16(src.data[i]);
         }
     }
     
     Matrix2D to_float() const {
         Matrix2D dst(rows, cols);
-        for (int i = 0; i < data.size(); ++i) {
+        for (size_t i = 0; i < data.size(); ++i) {
             dst.data[i] = q16_to_double(data[i]);
         }
         return dst;

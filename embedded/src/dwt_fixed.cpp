@@ -208,10 +208,9 @@ void idwt2d_single(const Matrix2D_Q16& LL, const Matrix2D_Q16& LH, const Matrix2
     }
 }
 
-Matrix2D_Q16 reconstruct(const WaveletDecomposition_Q16& decomp, int max_depth) {
+// 2D Full Reconstruction
+Matrix2D_Q16 reconstruct(const WaveletDecomposition_Q16& decomp, [[maybe_unused]] int max_depth) {
     WaveletFilters_Q16 filters = get_filters_q16(decomp.wavelet);
-    
-    int target_depth = (max_depth > 0 && max_depth <= decomp.levels) ? max_depth : decomp.levels;
     
     Matrix2D_Q16 current_ll = decomp.base_layer;
     

@@ -35,14 +35,14 @@ int main() {
         std::cout << "Running DWT Verification against Python Golden Vectors..." << std::endl;
         
         // Read input image
-        Matrix2D image = read_matrix("../../../verification/vectors/image_001.bin");
+        Matrix2D image = read_matrix("../../verification/vectors/image_001.bin");
         std::cout << "Loaded image: " << image.rows << "x" << image.cols << std::endl;
         
         // Run C++ DWT
-        WaveletDecomposition decomp = decompose(image, "haar", 3, "symmetric");
+        WaveletDecomposition decomp = decompose(image, "bior4.4", 3, "symmetric");
         
         // Read expected L0 (base layer)
-        Matrix2D expected_l0 = read_matrix("../../../verification/vectors/l0_001.bin");
+        Matrix2D expected_l0 = read_matrix("../../verification/vectors/l0_001.bin");
         
         // Compare L0
         if (decomp.base_layer.rows == 1 && decomp.base_layer.cols == 1) {
@@ -62,9 +62,9 @@ int main() {
         std::cout << "PASS: L0 matches Golden Vector!" << std::endl;
         
         // Read expected H1 (LH, HL, HH)
-        Matrix2D expected_lh = read_matrix("../../../verification/vectors/h1_lh.bin");
-        Matrix2D expected_hl = read_matrix("../../../verification/vectors/h1_hl.bin");
-        Matrix2D expected_hh = read_matrix("../../../verification/vectors/h1_hh.bin");
+        Matrix2D expected_lh = read_matrix("../../verification/vectors/h1_lh.bin");
+        Matrix2D expected_hl = read_matrix("../../verification/vectors/h1_hl.bin");
+        Matrix2D expected_hh = read_matrix("../../verification/vectors/h1_hh.bin");
         
         double lh_err = max_abs_error(expected_lh, decomp.residual_layers[1].LH);
         double hl_err = max_abs_error(expected_hl, decomp.residual_layers[1].HL);
@@ -83,7 +83,7 @@ int main() {
         
         // Reconstruct and compare
         Matrix2D recon = reconstruct(decomp);
-        Matrix2D expected_recon = read_matrix("../../../verification/vectors/recon_001.bin");
+        Matrix2D expected_recon = read_matrix("../../verification/vectors/recon_001.bin");
         
         double recon_err = max_abs_error(expected_recon, recon);
         std::cout << "Reconstruction Max Abs Error: " << recon_err << std::endl;

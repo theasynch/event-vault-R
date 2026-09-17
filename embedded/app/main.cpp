@@ -16,14 +16,14 @@ int main() {
     int detect_frame = 25;
     
     // Trigger callback
-    auto trigger_cb = [detect_frame](int frame_id, double ts, const std::vector<science::SourceMeasurement>& sources) {
+    auto trigger_cb = [detect_frame](int frame_id, [[maybe_unused]] double ts, [[maybe_unused]] const std::vector<science::SourceMeasurement>& sources) {
         return frame_id == detect_frame;
     };
     
     pipeline::EventVaultPipeline p(config, trigger_cb);
     
     // Read binary
-    std::ifstream file("../../../verification/vectors/saved_discovery_frames.bin", std::ios::binary);
+    std::ifstream file("../../verification/vectors/saved_discovery_frames.bin", std::ios::binary);
     if (!file) {
         std::cerr << "Failed to open verification file." << std::endl;
         return 1;
@@ -35,10 +35,12 @@ int main() {
     file.read(reinterpret_cast<char*>(&cols), sizeof(int));
     
     std::cout << "Loading " << num_frames << " frames (" << rows << "x" << cols << ")...\n";
+    std::cout.flush();
     
     int promoted_frames = 0;
     
     for (int i = 0; i < num_frames; ++i) {
+        std::cout << "Processing frame " << i << "...\n"; std::cout.flush();
         int frame_id;
         double timestamp;
         file.read(reinterpret_cast<char*>(&frame_id), sizeof(int));

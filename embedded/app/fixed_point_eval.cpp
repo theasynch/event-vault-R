@@ -12,7 +12,7 @@ using namespace eventvault;
 int main() {
     std::cout << "--- Fixed Point Accuracy Evaluation (B5-B6) ---\n";
     
-    std::ifstream file("../../../verification/vectors/saved_discovery_frames.bin", std::ios::binary);
+    std::ifstream file("../../verification/vectors/saved_discovery_frames.bin", std::ios::binary);
     if (!file) {
         std::cerr << "Failed to open verification file." << std::endl;
         return 1;
