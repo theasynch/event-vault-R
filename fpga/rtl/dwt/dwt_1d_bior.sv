@@ -68,7 +68,7 @@ module dwt_1d_bior #(
     localparam F = 10;
 
     // Input buffer
-    reg signed [IN_W-1:0] x_buf [0:MAX_N-1];
+    (* ramstyle = "M10K" *) reg signed [IN_W-1:0] x_buf [0:MAX_N-1];
     reg [10:0] wr_ptr;
     reg [10:0] N_reg;
     reg [10:0] out_len;
@@ -82,7 +82,8 @@ module dwt_1d_bior #(
 
     reg [2:0] state;
     reg [10:0] k_cnt;
-    reg [3:0]  j_cnt;
+    reg [3:0]  j_cnt, j_cnt_d1;
+    reg        valid_mac;
     reg signed [63:0] acc_lo, acc_hi;
 
     // Address calculation for symmetric boundary reflection
@@ -113,9 +114,8 @@ module dwt_1d_bior #(
     end
 
     // Read sample and get coefficient
-    wire signed [IN_W-1:0] x_val;
-    assign x_val = x_buf[refl_idx];
-
+    reg signed [IN_W-1:0] x_val;
+    
     // Coefficient lookup
     reg signed [31:0] coeff_lo, coeff_hi;
     always @(*) begin
@@ -134,12 +134,16 @@ module dwt_1d_bior #(
         endcase
     end
 
+    reg signed [31:0] coeff_lo_d1, coeff_hi_d1;
+
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             state    <= S_IDLE;
             wr_ptr   <= 0;
             k_cnt    <= 0;
             j_cnt    <= 0;
+            j_cnt_d1 <= 0;
+            valid_mac <= 1'b0;
             acc_lo   <= 0;
             acc_hi   <= 0;
             lo_valid <= 1'b0;
@@ -149,15 +153,24 @@ module dwt_1d_bior #(
             in_ready <= 1'b1;
             N_reg    <= 0;
             out_len  <= 0;
+            x_val    <= 0;
+            coeff_lo_d1 <= 0;
+            coeff_hi_d1 <= 0;
         end else begin
             lo_valid <= 1'b0;
             hi_valid <= 1'b0;
+            
+            // Synchronous block RAM read
+            x_val <= x_buf[refl_idx];
+            coeff_lo_d1 <= coeff_lo;
+            coeff_hi_d1 <= coeff_hi;
 
             case (state)
                 S_IDLE: begin
                     in_ready <= 1'b1;
                     wr_ptr   <= 0;
                     k_cnt    <= 0;
+                    valid_mac <= 1'b0;
                     if (in_valid) begin
                         x_buf[0] <= in_data;
                         wr_ptr   <= 1;
@@ -192,13 +205,24 @@ module dwt_1d_bior #(
 
                 S_COMPUTE: begin
                     in_ready <= 1'b0;
-                    acc_lo <= acc_lo + (x_val * coeff_lo);
-                    acc_hi <= acc_hi + (x_val * coeff_hi);
-
-                    if (j_cnt == F - 1) begin
-                        state <= S_OUTPUT;
-                    end else begin
+                    
+                    if (j_cnt < F) begin
                         j_cnt <= j_cnt + 1;
+                        valid_mac <= 1'b1;
+                    end else begin
+                        valid_mac <= 1'b0;
+                    end
+                    
+                    j_cnt_d1 <= j_cnt;
+                    
+                    if (valid_mac) begin
+                        acc_lo <= acc_lo + (x_val * coeff_lo_d1);
+                        acc_hi <= acc_hi + (x_val * coeff_hi_d1);
+                        
+                        if (j_cnt_d1 == F - 1) begin
+                            state <= S_OUTPUT;
+                            valid_mac <= 1'b0;
+                        end
                     end
                 end
 

@@ -18,8 +18,7 @@
 module line_buffer #(
     parameter int PIXEL_W   = 16,
     parameter int LINE_COLS = 1024,
-    parameter int NUM_LINES = 3,
-    localparam int COL_ADDR_W = $clog2(LINE_COLS)
+    parameter int NUM_LINES = 3
 )(
     input  logic                  clk,
     input  logic                  rst_n,
@@ -29,9 +28,11 @@ module line_buffer #(
     input  logic [PIXEL_W-1:0]    wr_data,
 
     // Read port — same column from each of the NUM_LINES most recent rows
-    input  logic [COL_ADDR_W-1:0] rd_col,          // column address for reads
+    input  logic [$clog2(LINE_COLS)-1:0] rd_col,          // column address for reads
     output logic [NUM_LINES*PIXEL_W-1:0] rd_data_flat
 );
+
+    localparam int COL_ADDR_W = $clog2(LINE_COLS);
 
     // -------------------------------------------------------------------------
     //  Internal write address counter

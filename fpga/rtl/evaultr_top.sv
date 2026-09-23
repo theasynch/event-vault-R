@@ -117,14 +117,21 @@ module evaultr_top #(
     dwt_2d_top dwt_inst (
         .clk(clk),
         .rst_n(rst_n),
+        .cfg_rows(11'd64),
+        .cfg_cols(11'd64),
         .in_valid(s_axis_tvalid),
         .in_data(s_axis_tdata),
         .in_last_col(in_last_col),
         .in_last_row(in_last_row),
         .in_ready(s_axis_tready),
-        .l0_valid(dwt_out_valid),
-        .l0_data(dwt_out_L0),
-        .l0_done(dwt_out_done)
+        .h3_valid(),
+        .h3_LH(), .h3_HL(), .h3_HH(),
+        .h2_valid(),
+        .h2_LH(), .h2_HL(), .h2_HH(),
+        .h1_valid(dwt_out_valid),
+        .h1_LH(), .h1_HL(), .h1_HH(),
+        .base_L0(dwt_out_L0),
+        .done(dwt_out_done)
     );
 
     // 2. Science Guardrail Evaluator

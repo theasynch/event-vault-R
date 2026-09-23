@@ -78,7 +78,7 @@ module dwt_2d_top #(
     );
 
     // LL1 buffer
-    reg signed [31:0] ll1_buf [0:MAX_L1_DIM*MAX_L1_DIM-1];
+    (* ramstyle = "M10K" *) reg signed [31:0] ll1_buf [0:MAX_L1_DIM*MAX_L1_DIM-1];
     reg [10:0] ll1_wr_ptr, ll1_rd_ptr;
     reg [10:0] ll1_rows, ll1_cols;
 
@@ -104,7 +104,7 @@ module dwt_2d_top #(
     );
 
     // LL2 buffer
-    reg signed [31:0] ll2_buf [0:MAX_L2_DIM*MAX_L2_DIM-1];
+    (* ramstyle = "M10K" *) reg signed [31:0] ll2_buf [0:MAX_L2_DIM*MAX_L2_DIM-1];
     reg [10:0] ll2_wr_ptr, ll2_rd_ptr;
     reg [10:0] ll2_rows, ll2_cols;
 
@@ -131,6 +131,13 @@ module dwt_2d_top #(
 
     // Feed counters
     reg [10:0] feed_row, feed_col;
+
+    // Synchronous reads
+    reg signed [31:0] ll1_rd_data, ll2_rd_data;
+    always_ff @(posedge clk) begin
+        ll1_rd_data <= ll1_buf[ll1_rd_ptr];
+        ll2_rd_data <= ll2_buf[ll2_rd_ptr];
+    end
 
     // Top controller
     always @(posedge clk or negedge rst_n) begin
@@ -205,7 +212,7 @@ module dwt_2d_top #(
                             top_state <= TOP_LEVEL2;
                         end else begin
                             l2_in_valid    <= 1'b1;
-                            l2_in_data     <= ll1_buf[ll1_rd_ptr];
+                            l2_in_data     <= ll1_rd_data;
                             l2_in_last_col <= (feed_col == ll1_cols - 1);
                             l2_in_last_row <= (feed_row == ll1_rows - 1);
                             ll1_rd_ptr     <= ll1_rd_ptr + 1;
@@ -247,7 +254,7 @@ module dwt_2d_top #(
                             top_state <= TOP_LEVEL3;
                         end else begin
                             l3_in_valid    <= 1'b1;
-                            l3_in_data     <= ll2_buf[ll2_rd_ptr];
+                            l3_in_data     <= ll2_rd_data;
                             l3_in_last_col <= (feed_col == ll2_cols - 1);
                             l3_in_last_row <= (feed_row == ll2_rows - 1);
                             ll2_rd_ptr     <= ll2_rd_ptr + 1;

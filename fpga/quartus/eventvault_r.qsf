@@ -12,3 +12,10 @@ set_global_assignment -name SYSTEMVERILOG_FILE ../rtl/dwt/dwt_2d_level.sv
 set_global_assignment -name SYSTEMVERILOG_FILE ../rtl/dwt/dwt_1d_bior.sv
 set_global_assignment -name SYSTEMVERILOG_FILE ../rtl/buffers/line_buffer.sv
 set_global_assignment -name SYSTEMVERILOG_FILE ../rtl/guardrail/science_guardrail.sv
+set_global_assignment -name SDC_FILE eventvault_r.sdc
+
+# Virtual Pin Assignments for Prototype Testing
+set_instance_assignment -name VIRTUAL_PIN ON -to s_axi_*
+set_instance_assignment -name VIRTUAL_PIN ON -to s_axis_*
+set_instance_assignment -name VIRTUAL_PIN ON -to m_axis_*
+
