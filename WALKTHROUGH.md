@@ -1,75 +1,192 @@
 # EventVault-R: Complete Testing & Execution Walkthrough
 
-This guide provides a comprehensive step-by-step process for compiling the FPGA hardware, deploying it to your DE1-SoC board, and running the software verification and profiling tools.
-
-## 1. Quartus Synthesis (Hardware Compilation)
-
-We have heavily optimized the RTL in Phase C so it fits cleanly into the DE1-SoC logic fabric. 
-
-1. **Open Quartus Prime:** Launch Intel Quartus Prime on your Windows machine.
-2. **Open Project:** Go to `File -> Open Project` and navigate to `fpga/quartus/eventvault_r.qpf`.
-3. **Start Compilation:** Click the **Start Compilation** button (the purple play button) in the top toolbar.
-4. **Verify Resources:** Once complete, check the Compilation Report. The Fitter section should now show Logic Array Blocks (LABs) well below the 3207 limit, and M10K memory block utilization should be clearly visible.
-
-## 2. Deploying to the DE1-SoC (FPGA Bitstream)
-
-You need to load the compiled hardware `.sof` file onto the FPGA side of the DE1-SoC board.
-
-1. **Connect the Board:** Ensure your DE1-SoC is powered on and connected to your PC via the USB Blaster port.
-2. **Open Programmer:** In Quartus, go to `Tools -> Programmer`.
-3. **Hardware Setup:** Click `Hardware Setup` in the top left and select `DE-SoC [USB-1]`.
-4. **Add File:** If `eventvault_r.sof` isn't listed, click `Add File` and select `fpga/quartus/output_files/eventvault_r.sof`.
-5. **Program:** Check the `Program/Configure` box next to the file, and hit **Start**. The progress bar in the top right will hit 100% (Successful). 
-
-## 3. Preparing the Test Vectors (Software)
-
-Before running the C++ tools, you need to generate the synthetic astronomical frame data that the C++ tests will read.
-
-1. Open your terminal in the `event-vault-R` root folder.
-2. Run the vector generation script:
-   ```bash
-   python verification/generate_vectors.py
-   ```
-   This will generate the required binary files (like `saved_discovery_frames.bin`) inside `verification/vectors/`.
-
-## 4. Building the C++ Verification Suite
-
-You can compile the C++ software on your Windows PC using MinGW (as we set it up earlier) to run the simulation/verification. If you want to run this on the DE1-SoC's ARM processor, you can use `scp` to copy the `embedded/` folder to the board and run `make` there.
-
-1. Open your terminal and navigate to the embedded folder:
-   ```bash
-   cd embedded
-   ```
-2. Generate the build files and compile the suite using CMake (this automatically detects your lab machine's C++ compiler like Visual Studio or MinGW):
-   ```bash
-   mkdir build
-   cd build
-   cmake ..
-   cmake --build . --config Release
-   ```
-   This generates the executables in `embedded/build/` (or `embedded/build/Release/` if using Visual Studio): `test_dwt.exe`, `fixed_point_eval.exe`, and `eventvault_app.exe`.
-
-## 5. Running the Tests & Recording Results
-
-### Task B16: Rate-Distortion Sweep
-To evaluate the fixed-point distortion versus floating-point, use the `fixed_point_eval.exe` tool. This tool runs the entire image through both float and fixed-point pipelines and outputs the Mean Squared Error (MSE).
-
-1. In the `embedded/` directory, run:
-   ```bash
-   build\fixed_point_eval.exe
-   ```
-2. **Recording Results:** The console will print out the RMSE (Root Mean Square Error) between the theoretical C++ floating-point DWT and the fixed-point Q16.16 DWT logic that mirrors the FPGA. Record this RMSE value for your documentation. The RMSE should be practically 0 (or exactly 0) due to our recent fixes.
-
-### Task B17: Performance Profiling
-To test the overall system logic (trigger mechanics, escrow buffering, and event promotion), use `eventvault_app.exe`.
-
-1. Run the app:
-   ```bash
-   build\eventvault_app.exe
-   ```
-2. **Recording Results:** The tool will process 50 frames. It is configured to detect a transient event at frame 25. You will see the console output state that the trigger fired at frame 25, and it will subsequently dump the escrowed/promoted frames (e.g., frames 15 to 35). Record the output log to prove the system correctly caches and promotes history surrounding a trigger event.
+This guide covers the full end-to-end flow: FPGA compilation, HPS-FPGA integration, board deployment, and benchmark execution.
 
 ---
 
-> [!TIP]
-> If you run into any "File not found" errors when running the `.exe` files, ensure you are running them from the `embedded/` directory (not `embedded/build/`) so the relative paths to `../verification/vectors/` resolve correctly.
+## Part A: FPGA Synthesis (What You've Already Done)
+
+1. Open Quartus Prime → `File → Open Project` → `fpga/quartus/eventvault_r.qpf`
+2. Click **Start Compilation** (purple play button)
+3. Verify the Fitter Summary shows ~1,032 ALMs (3.2%) and ~44 M10K blocks (11%)
+
+---
+
+## Part B: HPS-FPGA Integration (New — Platform Designer)
+
+This is the step that actually connects the ARM processor to our FPGA accelerator.
+
+### B1. Open Platform Designer
+1. In Quartus, go to **Tools → Platform Designer** (or Qsys on older versions)
+
+### B2. Add the HPS Component
+1. In the IP Catalog (left panel), search for **"Arria V/Cyclone V Hard Processor System"**
+2. Double-click to add it
+3. In the configuration window:
+   - **FPGA Interfaces tab:**
+     - Enable **Lightweight HPS-to-FPGA bridge** (this is how the ARM talks to our registers)
+     - Set its width to **32 bits**
+   - **Peripheral Pins tab:**
+     - Enable **UART0** (for serial console via PuTTY)
+     - Enable **SD/MMC Controller** (for Linux boot)
+     - Enable **USB1** (for USB peripherals)
+     - Enable **Ethernet 0** (for SSH access)
+     - Enable **SPI Master 1**, **I2C1**
+   - **SDRAM tab:**
+     - Enable **HPS-to-SDRAM** interface
+     - Configure for **DDR3** matching DE1-SoC specs (1GB, 400 MHz, CAS latency 5)
+
+### B3. Add Clock Source
+1. Add a **Clock Source** from the IP Catalog
+2. Set frequency to **50 MHz**
+3. Connect its `clk` output to the HPS component's `f2h_axi_clock` and `h2f_lw_axi_clock`
+
+### B4. Export the Signals
+1. Right-click the HPS `memory` conduit → **Export** (name: `memory`)
+2. Right-click the HPS `hps_io` conduit → **Export** (name: `hps_io`)
+3. Right-click the HPS `h2f_lw_axi_master` → **Export** (name: `hps_0_h2f_lw_axi_master`)
+
+### B5. Generate
+1. Set the system name to **`soc_system`**
+2. Click **Generate HDL...** → Select **Verilog** → Click **Generate**
+3. This creates a `soc_system/` folder with all the bridge logic
+
+### B6. Update the Quartus Project
+1. In the `.qsf` file, change the top-level entity:
+   ```
+   set_global_assignment -name TOP_LEVEL_ENTITY de1_soc_top
+   ```
+2. Add the generated Qsys files:
+   ```
+   set_global_assignment -name QSYS_FILE soc_system.qsys
+   ```
+3. Add the new wrapper:
+   ```
+   set_global_assignment -name SYSTEMVERILOG_FILE ../rtl/de1_soc_top.sv
+   ```
+4. **Remove** the virtual pin assignments (we now have real pins!)
+5. Import the DE1-SoC pin assignments from Terasic's golden `.qsf` file
+
+### B7. Recompile
+Click **Start Compilation**. This time it will compile the HPS + FPGA together.
+
+---
+
+## Part C: Prepare the DE1-SoC Board
+
+### C1. Flash Linux to SD Card
+1. Download the DE1-SoC Linux console image from [Terasic's DE1-SoC Resources page](https://www.terasic.com.tw/cgi-bin/page/archive.pl?No=836)
+2. Use **balenaEtcher** or **Win32 Disk Imager** to flash it to a micro-SD card (≥4 GB)
+3. Insert the SD card into the DE1-SoC's micro-SD slot
+
+### C2. Connect Cables
+- **USB Blaster** (Mini-USB) → for JTAG programming
+- **UART-to-USB** (Mini-USB on the other port) → for serial console
+- **Power** (12V barrel jack)
+- **Ethernet** (optional, for SSH)
+
+### C3. Program the FPGA
+1. Open Quartus Programmer
+2. Click **Auto Detect** → select `5CSEMA5`
+3. Double-click the `5CSEMA5` row → select your new `.sof` file
+4. Check **Program/Configure** → click **Start**
+5. It should now succeed (no more 81% failure since the HPS is properly configured!)
+
+### C4. Connect Serial Console
+1. Open **PuTTY** (or any serial terminal)
+2. Select **Serial**, set COM port (check Device Manager), baud rate **115200**
+3. Click **Open** → you should see the Linux boot messages
+4. Log in (default: `root`, no password)
+
+---
+
+## Part D: Run the Benchmark
+
+### D1. Cross-Compile on Your PC
+If you have the ARM cross-compiler installed:
+```bash
+arm-linux-gnueabihf-gcc -O2 -o hps_benchmark embedded/app/hps_benchmark.c -lm
+```
+
+If you do NOT have the cross-compiler, you can compile directly on the board:
+1. Copy `embedded/app/hps_benchmark.c` to the SD card (or use `scp`)
+2. On the board's Linux terminal:
+   ```bash
+   gcc -O2 -o hps_benchmark hps_benchmark.c -lm
+   ```
+
+### D2. Execute the Benchmark
+```bash
+sudo ./hps_benchmark
+```
+
+> **Note:** `sudo` is required because the program uses `/dev/mem` to access the FPGA bridge.
+
+### D3. Record the Results
+The program will print something like:
+```
+==================================================
+ EventVault-R HPS-FPGA Benchmark
+ Platform: DE1-SoC (Cyclone V, ARM Cortex-A9)
+ Frame Size: 64 x 64 pixels
+==================================================
+
+[1] Software DWT (ARM Cortex-A9)
+  Iterations: 100
+  Total Time: 1523.45 ms
+  Per Frame:  15.234 ms
+  Frame Rate: 65.6 FPS
+  Throughput: 0.269 Megapixels/sec
+
+[2] Hardware DWT (FPGA via Lightweight Bridge)
+  FPGA Cycles:     2750
+  Per Frame:       0.055 ms
+  Frame Rate:      18181.8 FPS
+  Throughput:      74.473 Megapixels/sec
+  Last L0 Value:   0x00A3F21C
+  Guardrail Safe:  YES
+
+==================================================
+ RESULTS SUMMARY
+==================================================
+  ARM Software:     15.234 ms/frame  (65.6 FPS)
+  FPGA Hardware:    0.055 ms/frame  (18181.8 FPS)
+  Speedup Factor:   276.9x
+  SW Throughput:    0.269 MP/s
+  HW Throughput:    74.473 MP/s
+==================================================
+```
+
+**Screenshot this output! These are your REAL, MEASURED results for the paper.**
+
+---
+
+## Part E: Generate Test Vectors (Python)
+
+Before running the C++ executables, generate the golden vectors:
+```bash
+pip install -r requirements.txt
+python verification/generate_vectors.py
+```
+
+---
+
+## Part F: C++ Verification Suite
+
+### Build (on PC)
+```bash
+cd embedded
+build.bat
+```
+
+### Run Fixed-Point Evaluation (B16)
+```bash
+build\fixed_point_eval.exe
+```
+Records: RMSE, Max Error, Delta F, Delta x
+
+### Run Saved Discovery Test (B17)
+```bash
+build\eventvault_app.exe
+```
+Records: Trigger frame, promoted frame count, escrow behavior
