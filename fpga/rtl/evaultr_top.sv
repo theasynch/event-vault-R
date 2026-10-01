@@ -159,11 +159,6 @@ module evaultr_top #(
     assign s_axi_arready = !s_axi_rvalid;
     assign s_axi_rresp   = 2'b00;
 
-    // Bridge: pixel write register -> AXI-Stream interface
-    assign s_axis_tdata  = px_wr_data;
-    assign s_axis_tvalid = px_wr_pending;
-    assign s_axis_tlast  = px_wr_last_col;
-
 
     // 1. 2D DWT Module
     wire dwt_out_valid;
