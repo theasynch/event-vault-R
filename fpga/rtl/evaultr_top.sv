@@ -61,6 +61,9 @@ module evaultr_top #(
     // =========================================================================
     // Register Map / Control Logic
     // =========================================================================
+    
+    wire guardrail_valid;
+    wire is_safe;
     // Offset 0x00: REG_CONTROL  (W)  — bit[0] = start, bit[1] = reset_accel
     // Offset 0x04: REG_PIXEL    (W)  — write a pixel (triggers s_axis_tvalid)
     // Offset 0x08: REG_FRAME_ID (W)  — current frame ID
@@ -85,13 +88,29 @@ module evaultr_top #(
     reg          px_wr_last_col;
     reg          px_wr_last_row;
 
-    // Performance counter (free-running cycle counter for ARM timing)
+    // Hardware Traffic Generator (to measure max throughput without ARM bottleneck)
+    reg [11:0] hw_gen_count;
+    reg        hw_gen_active;
+
+    // Performance counter (measures ONLY active processing cycles)
     reg [31:0]   perf_counter;
+    reg          perf_running;
+    
     always_ff @(posedge clk or negedge rst_n) begin
-        if (!rst_n)
+        if (!rst_n) begin
             perf_counter <= '0;
-        else
-            perf_counter <= perf_counter + 1;
+            perf_running <= 1'b0;
+        end else begin
+            if ((px_wr_pending || hw_gen_active) && !perf_running) begin
+                perf_running <= 1'b1;
+                perf_counter <= '0;
+            end else if (guardrail_valid) begin // guardrail_valid is declared later, we'll use a wire
+                perf_running <= 1'b0;
+            end
+            
+            if (perf_running)
+                perf_counter <= perf_counter + 1;
+        end
     end
 
     // Capture last result for ARM readback
@@ -113,6 +132,18 @@ module evaultr_top #(
             // Clear single-cycle pixel write pulse
             if (px_wr_pending && s_axis_tready)
                 px_wr_pending <= 1'b0;
+                
+            // HW Generator Logic
+            if (reg_control[2]) begin
+                hw_gen_active <= 1'b1;
+                hw_gen_count <= '0;
+                reg_control[2] <= 1'b0; // Auto-clear trigger
+            end else if (hw_gen_active && dwt_in_ready) begin
+                if (hw_gen_count == 4095)
+                    hw_gen_active <= 1'b0;
+                else
+                    hw_gen_count <= hw_gen_count + 1;
+            end
 
             if (s_axi_awvalid && s_axi_wvalid && s_axi_awready && s_axi_wready) begin
                 s_axi_bvalid <= 1'b1;
@@ -160,21 +191,31 @@ module evaultr_top #(
     assign s_axi_rresp   = 2'b00;
 
 
+
     // 1. 2D DWT Module
     wire dwt_out_valid;
     wire signed [31:0] dwt_out_L0;
     wire dwt_out_done;
     wire dwt_in_ready;
 
+    // Mux between ARM MMIO and HW Traffic Generator
+    // Mux between ARM MMIO and HW Traffic Generator
+    wire [31:0] actual_in_data  = hw_gen_active ? {20'b0, hw_gen_count} : px_wr_data;
+    wire        actual_in_valid = hw_gen_active ? 1'b1 : px_wr_pending;
+    wire        actual_last_col = (hw_gen_active || hw_gen_count == 4095) ? (hw_gen_count[5:0] == 6'd63) : px_wr_last_col;
+    wire        actual_last_row = (hw_gen_active || hw_gen_count == 4095) ? (hw_gen_count == 4095) : px_wr_last_row;
+    
+    assign s_axis_tready = dwt_in_ready;
+
     dwt_2d_top dwt_inst (
         .clk(clk),
         .rst_n(rst_n),
         .cfg_rows(11'd64),
         .cfg_cols(11'd64),
-        .in_valid(px_wr_pending),
-        .in_data(px_wr_data),
-        .in_last_col(px_wr_last_col),
-        .in_last_row(px_wr_last_row),
+        .in_valid(actual_in_valid),
+        .in_data(actual_in_data),
+        .in_last_col(actual_last_col),
+        .in_last_row(actual_last_row),
         .in_ready(dwt_in_ready),
         .h3_valid(),
         .h3_LH(), .h3_HL(), .h3_HH(),
@@ -195,8 +236,17 @@ module evaultr_top #(
     end
 
     // 2. Science Guardrail Evaluator
-    wire guardrail_valid;
-    wire is_safe;
+    // Level 3 output is 8x8, so last_col happens every 8 valid pixels
+    reg [2:0] l3_out_col_cnt;
+    always_ff @(posedge clk or negedge rst_n) begin
+        if (!rst_n)
+            l3_out_col_cnt <= '0;
+        else if (reg_control[2] || px_wr_pending) // clear on new frame
+            l3_out_col_cnt <= '0;
+        else if (dwt_out_valid)
+            l3_out_col_cnt <= l3_out_col_cnt + 1;
+    end
+    wire l3_out_last_col = (l3_out_col_cnt == 3'd7);
 
     science_guardrail #(
         .PIXEL_W(32),
@@ -206,7 +256,7 @@ module evaultr_top #(
         .rst_n(rst_n),
         .in_valid(dwt_out_valid),
         .in_data(dwt_out_L0),
-        .in_last_col(1'b0),
+        .in_last_col(l3_out_last_col),
         .in_last_row(dwt_out_done),
         .check_en(1'b1),
         .ref_x(10'd0),
@@ -221,11 +271,22 @@ module evaultr_top #(
     // =========================================================================
     // Status Register (readable by ARM)
     // =========================================================================
-    // bit[0] = DWT done flag
+    // bit[0] = DWT done flag (sticky)
     // bit[1] = DWT input ready
     // bit[2] = guardrail is_safe
     // bit[3] = guardrail decision_valid
-    assign reg_status = {28'b0, guardrail_valid, is_safe, dwt_in_ready, dwt_out_done};
+    
+    reg sticky_done;
+    always_ff @(posedge clk or negedge rst_n) begin
+        if (!rst_n)
+            sticky_done <= 1'b0;
+        else if (reg_control[2] || px_wr_pending) // clear on new hardware or software frame
+            sticky_done <= 1'b0;
+        else if (dwt_out_done)
+            sticky_done <= 1'b1;
+    end
+
+    assign reg_status = {28'b0, guardrail_valid, is_safe, dwt_in_ready, sticky_done};
 
     // AXI-Stream Master output (directly from DWT L0)
     assign m_axis_tvalid = dwt_out_valid;

@@ -49,7 +49,7 @@ module de1_soc_top (
 
     // ---- HPS Ethernet ----
     output logic        HPS_ENET_GTX_CLK,
-    inout  wire         HPS_ENET_INT_N,
+    // inout  wire         HPS_ENET_INT_N,
     output logic        HPS_ENET_MDC,
     inout  wire         HPS_ENET_MDIO,
     input  logic        HPS_ENET_RX_CLK,
@@ -68,7 +68,7 @@ module de1_soc_top (
     output logic        HPS_SPIM_MOSI,
     input  logic        HPS_SPIM_MISO,
     output logic        HPS_SPIM_SS,
-    input  logic [1:0]  HPS_KEY,
+    // input  logic [1:0]  HPS_KEY,
 
     // ---- FPGA LEDs (directly accessible) ----
     output logic [9:0]  LEDR
@@ -102,6 +102,14 @@ module de1_soc_top (
     logic [1:0]  h2f_lw_rresp;
     logic        h2f_lw_rvalid;
     logic        h2f_lw_rready;
+
+    // Full AXI wires (bridging to AXI-Lite)
+    logic [11:0] h2f_lw_awid;
+    logic [11:0] h2f_lw_arid;
+    logic [20:0] h2f_lw_awaddr_full;
+    logic [20:0] h2f_lw_araddr_full;
+    assign h2f_lw_awaddr = h2f_lw_awaddr_full[11:0];
+    assign h2f_lw_araddr = h2f_lw_araddr_full[11:0];
 
     // AXI-Stream pixel data (directly memory-mapped via control registers)
     // The ARM writes pixels one at a time to a data register,
@@ -141,10 +149,10 @@ module de1_soc_top (
         .memory_mem_dqs                   (HPS_DDR3_DQS_P),
         .memory_mem_dqs_n                 (HPS_DDR3_DQS_N),
         .memory_mem_odt                   (HPS_DDR3_ODT),
-        .memory_mem_ras_n                 (HPS_DDR3_RAS_N),
+        .memory_mem_ras_n                (HPS_DDR3_RAS_N),
         .memory_mem_reset_n              (HPS_DDR3_RESET_N),
-        .memory_mem_rzq                   (HPS_DDR3_RZQ),
-        .memory_mem_we_n                  (HPS_DDR3_WE_N),
+        .memory_oct_rzqin                (HPS_DDR3_RZQ),
+        .memory_mem_we_n                 (HPS_DDR3_WE_N),
 
         // HPS UART
         .hps_io_hps_io_uart0_inst_RX     (HPS_UART_RX),
@@ -173,20 +181,20 @@ module de1_soc_top (
         .hps_io_hps_io_usb1_inst_STP     (HPS_USB_STP),
 
         // HPS Ethernet
-        .hps_io_hps_io_ethernet0_inst_TX_CLK (HPS_ENET_GTX_CLK),
-        .hps_io_hps_io_ethernet0_inst_TX_CTL (HPS_ENET_TX_EN),
-        .hps_io_hps_io_ethernet0_inst_TXD0   (HPS_ENET_TX_DATA[0]),
-        .hps_io_hps_io_ethernet0_inst_TXD1   (HPS_ENET_TX_DATA[1]),
-        .hps_io_hps_io_ethernet0_inst_TXD2   (HPS_ENET_TX_DATA[2]),
-        .hps_io_hps_io_ethernet0_inst_TXD3   (HPS_ENET_TX_DATA[3]),
-        .hps_io_hps_io_ethernet0_inst_RX_CLK (HPS_ENET_RX_CLK),
-        .hps_io_hps_io_ethernet0_inst_RX_CTL (HPS_ENET_RX_DV),
-        .hps_io_hps_io_ethernet0_inst_RXD0   (HPS_ENET_RX_DATA[0]),
-        .hps_io_hps_io_ethernet0_inst_RXD1   (HPS_ENET_RX_DATA[1]),
-        .hps_io_hps_io_ethernet0_inst_RXD2   (HPS_ENET_RX_DATA[2]),
-        .hps_io_hps_io_ethernet0_inst_RXD3   (HPS_ENET_RX_DATA[3]),
-        .hps_io_hps_io_ethernet0_inst_MDIO   (HPS_ENET_MDIO),
-        .hps_io_hps_io_ethernet0_inst_MDC    (HPS_ENET_MDC),
+        .hps_io_hps_io_emac1_inst_TX_CLK (HPS_ENET_GTX_CLK),
+        .hps_io_hps_io_emac1_inst_TX_CTL (HPS_ENET_TX_EN),
+        .hps_io_hps_io_emac1_inst_TXD0   (HPS_ENET_TX_DATA[0]),
+        .hps_io_hps_io_emac1_inst_TXD1   (HPS_ENET_TX_DATA[1]),
+        .hps_io_hps_io_emac1_inst_TXD2   (HPS_ENET_TX_DATA[2]),
+        .hps_io_hps_io_emac1_inst_TXD3   (HPS_ENET_TX_DATA[3]),
+        .hps_io_hps_io_emac1_inst_RX_CLK (HPS_ENET_RX_CLK),
+        .hps_io_hps_io_emac1_inst_RX_CTL (HPS_ENET_RX_DV),
+        .hps_io_hps_io_emac1_inst_RXD0   (HPS_ENET_RX_DATA[0]),
+        .hps_io_hps_io_emac1_inst_RXD1   (HPS_ENET_RX_DATA[1]),
+        .hps_io_hps_io_emac1_inst_RXD2   (HPS_ENET_RX_DATA[2]),
+        .hps_io_hps_io_emac1_inst_RXD3   (HPS_ENET_RX_DATA[3]),
+        .hps_io_hps_io_emac1_inst_MDIO   (HPS_ENET_MDIO),
+        .hps_io_hps_io_emac1_inst_MDC    (HPS_ENET_MDC),
 
         // HPS SPI
         .hps_io_hps_io_spim1_inst_CLK    (HPS_SPIM_CLK),
@@ -202,22 +210,26 @@ module de1_soc_top (
         .hps_io_hps_io_gpio_inst_GPIO53  (HPS_CONV_USB_N),
 
         // Lightweight HPS-to-FPGA Bridge (directly to our accelerator)
-        .hps_0_h2f_lw_axi_clock_clk      (h2f_lw_clk),
-        .hps_0_h2f_lw_axi_master_awaddr  (h2f_lw_awaddr),
+        .hps_0_h2f_lw_axi_master_awid    (h2f_lw_awid),
+        .hps_0_h2f_lw_axi_master_awaddr  (h2f_lw_awaddr_full),
         .hps_0_h2f_lw_axi_master_awvalid (h2f_lw_awvalid),
         .hps_0_h2f_lw_axi_master_awready (h2f_lw_awready),
         .hps_0_h2f_lw_axi_master_wdata   (h2f_lw_wdata),
         .hps_0_h2f_lw_axi_master_wstrb   (h2f_lw_wstrb),
         .hps_0_h2f_lw_axi_master_wvalid  (h2f_lw_wvalid),
         .hps_0_h2f_lw_axi_master_wready  (h2f_lw_wready),
+        .hps_0_h2f_lw_axi_master_bid     (h2f_lw_awid),     // Loop back ID
         .hps_0_h2f_lw_axi_master_bresp   (h2f_lw_bresp),
         .hps_0_h2f_lw_axi_master_bvalid  (h2f_lw_bvalid),
         .hps_0_h2f_lw_axi_master_bready  (h2f_lw_bready),
-        .hps_0_h2f_lw_axi_master_araddr  (h2f_lw_araddr),
+        .hps_0_h2f_lw_axi_master_arid    (h2f_lw_arid),
+        .hps_0_h2f_lw_axi_master_araddr  (h2f_lw_araddr_full),
         .hps_0_h2f_lw_axi_master_arvalid (h2f_lw_arvalid),
         .hps_0_h2f_lw_axi_master_arready (h2f_lw_arready),
+        .hps_0_h2f_lw_axi_master_rid     (h2f_lw_arid),     // Loop back ID
         .hps_0_h2f_lw_axi_master_rdata   (h2f_lw_rdata),
         .hps_0_h2f_lw_axi_master_rresp   (h2f_lw_rresp),
+        .hps_0_h2f_lw_axi_master_rlast   (1'b1),            // Always 1 for AXI-Lite
         .hps_0_h2f_lw_axi_master_rvalid  (h2f_lw_rvalid),
         .hps_0_h2f_lw_axi_master_rready  (h2f_lw_rready)
     );
@@ -285,5 +297,4 @@ module de1_soc_top (
         rst_sync <= {rst_sync[1:0], 1'b1};
     end
     assign h2f_lw_rst_n = rst_sync[2];
-
 endmodule
