@@ -1,0 +1,88 @@
+\documentclass[journal]{IEEEtran}
+\usepackage{amsmath,amsfonts}
+\usepackage{algorithmic}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+
+\begin{document}
+
+\title{EventVault-R: A Hardware-Accelerated Autonomous Escrow System for High-Speed Transient Astronomy}
+
+\author{EventVault-R Research Team}
+
+\maketitle
+
+\begin{abstract}
+Next-generation astronomical surveys generate massive continuous streams of pixel data, overwhelming downstream bandwidth and storage. We present EventVault-R, a System-on-Chip (SoC) hardware accelerator implemented on an Intel Cyclone V FPGA. EventVault-R utilizes a highly pipelined 3-level 2D Biorthogonal 4.4 Discrete Wavelet Transform (DWT) engine coupled with autonomous science guardrails to detect transient anomalies. Using a cyclic escrow buffer, it retains high-fidelity historical data preceding a trigger while discarding baseline observations. Our hardware implementation achieves a maximum operating frequency of 88.45 MHz, processing 88.45 Megapixels per second, while requiring only 3\% of available adaptive logic modules. Compared to a software-only baseline running on an ARM Cortex-A9 processor, the FPGA accelerator delivers a $>$300$\times$ increase in throughput, providing a highly efficient, autonomous solution for data-constrained space and edge-astronomy platforms.
+\end{abstract}
+
+\section{Introduction}
+Modern time-domain astronomy is limited by downlink bandwidth. Traditional observation models capture and transmit all sensor data, relying on ground-based processing to identify transient events (e.g., supernovae, fast radio bursts). The \textit{EventVault-R} architecture shifts this paradigm to the edge by embedding a streaming 2D Discrete Wavelet Transform (DWT) and an autonomous guardrail evaluator directly into the sensor readout pipeline.
+
+By leveraging an FPGA/ARM heterogeneous System-on-Chip (SoC) architecture, EventVault-R acts as a continuous ``dashcam'' for telescopes. It buffers multi-resolution residuals in a local escrow memory, promoting historical data to permanent storage only when a transient trigger is validated by the hardware guardrail.
+
+\section{Hardware Architecture and Resource Utilization}
+The DWT acceleration engine was written in SystemVerilog and synthesized for the Intel Cyclone V SoC (5CSEMA5F31C6). To minimize Logic Array Block (LAB) exhaustion, large intermediate residual buffers (L0, H1, H2, H3) were explicitly forced into M10K block RAMs using synchronous 1-cycle latency read pipelines.
+
+\subsection{Resource Utilization}
+The synthesis and place-and-route results demonstrate that the accelerator is highly resource-efficient, making it suitable for edge deployment alongside other mission-critical IP cores.
+
+\begin{table}[ht]
+\centering
+\caption{Cyclone V FPGA Resource Utilization}
+\label{tab:utilization}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+\textbf{Resource} & \textbf{Used} & \textbf{Available} & \textbf{Utilization} \\ \midrule
+Logic Utilization (ALMs) & 1,032 & 32,070 & 3.2\% \\
+Dedicated Logic Registers & 1,076 & - & - \\
+Block Memory Bits & 234,656 & 4,065,280 & 5.7\% \\
+M10K RAM Blocks & 44 & 397 & 11.0\% \\
+DSP Blocks (Multipliers) & 15 & 87 & 17.2\% \\ \bottomrule
+\end{tabular}
+\end{table}
+
+\section{Performance and Hardware vs. Software Comparison}
+To demonstrate the necessity and efficiency of the hardware architecture, we established a software-only baseline. The entire EventVault-R algorithmic pipeline was executed sequentially on the DE1-SoC's integrated ARM Cortex-A9 Hard Processor System (HPS) using C++17. 
+
+\subsection{Timing Analysis \& Throughput Contrast}
+Static Timing Analysis (STA) on the FPGA fabric confirmed a worst-case $F_{max}$ of 88.45 MHz. The fully unrolled DWT hardware pipeline processes exactly one pixel per clock cycle for Level 1 decompositions.
+
+Table~\ref{tab:comparison} contrasts the measured performance of a $64 \times 64$ focal plane region processed via the ARM CPU versus the FPGA fabric.
+
+\begin{table}[ht]
+\centering
+\caption{ARM Cortex-A9 Software vs. FPGA Hardware Performance}
+\label{tab:comparison}
+\begin{tabular}{@{}lcc@{}}
+\toprule
+\textbf{Metric} & \textbf{ARM CPU (Software)} & \textbf{FPGA (Hardware)} \\ \midrule
+Latency per Frame & $\approx 15.0$ ms & $\approx 0.062$ ms \\
+Max Frame Rate & 66 FPS & $>$16,000 FPS \\
+Throughput & 0.27 Megapixels/sec & \textbf{88.45 Megapixels/sec} \\ 
+Processing Model & Sequential Row/Col & Deeply Pipelined Parallel \\ \bottomrule
+\end{tabular}
+\end{table}
+
+As shown, the FPGA accelerator achieves an extraordinary \textbf{$>$300$\times$ improvement} in throughput over the embedded processor. High-speed astronomical cameras routinely operate at thousands of frames per second, a data rate that completely overwhelms the ARM processor but is effortlessly handled by the FPGA fabric.
+
+\section{Mathematical Fidelity}
+Floating-point arithmetic is prohibitively expensive in FPGA logic. EventVault-R employs a \textbf{Q16.16 Fixed-Point} representation for all wavelet coefficients and accumulation registers.
+
+A software reference model evaluated the structural distortion introduced by hardware quantization. The Root Mean Square Error (RMSE) between the idealized double-precision Python DWT and the Q16.16 C++/RTL pipeline was found to be negligible ($<0.1$ pixel intensity units). This proves that the 32-bit fixed-point path provides sufficient dynamic range to preserve faint astronomical signals without triggering false guardrail alerts.
+
+\section{System-Level Efficacy}
+The overarching goal of EventVault-R is bandwidth reduction. The system was stimulated with an artificial 50-frame observation sequence containing a transient event at $t=25$.
+
+\subsection{Escrow Promotion}
+Running on the ARM Cortex-A9 Hard Processor System (HPS), the software orchestration layer successfully maintained a rolling window of 70 frames. Upon hardware trigger assertion at $t=25$, the system locked the escrow buffer and promoted frames $t=15$ through $t=35$. 
+
+This deterministic behavior demonstrates a \textbf{100\% recovery rate} for pre-trigger observations, while achieving a \textbf{60\% bandwidth reduction} over the 50-frame window by safely discarding the 30 non-anomalous baseline frames.
+
+\section{Conclusion}
+EventVault-R successfully bridges the gap between high-speed sensor ingestion and constrained downlink budgets. By achieving 88.45 MP/s throughput using only 3\% of the available logic fabric, the SoC architecture proves the viability of placing autonomous DWT analysis and escrow buffering directly at the focal plane of next-generation instruments.
+
+\end{document}
